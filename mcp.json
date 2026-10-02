@@ -1,0 +1,13 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/mcp.json",
+  "mcpServers": {
+    "backlink-hub": {
+      "type": "http",
+      "url": "https://hub.recmoment.net/mcp",
+      "headers": {
+        "Authorization": "Bearer rmh_YOUR_KEY_HERE"
+      },
+      "note": "Free key: https://recmoment.net/hub-portal/ — replace rmh_YOUR_KEY_HERE with your key"
+    }
+  }
+}

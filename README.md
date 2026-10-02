@@ -1,5 +1,10 @@
 # backlink-radar
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-black.svg)](LICENSE)
+[![MCP server](https://img.shields.io/badge/MCP-hub.recmoment.net%2Fmcp-blue.svg)](https://hub.recmoment.net/mcp)
+[![Backlink Hub](https://img.shields.io/badge/backlink--hub-join%20free-3fb950.svg)](https://recmoment.net/hub/)
+[![Website](https://img.shields.io/badge/by-Rec%20Moment-5e697f.svg)](https://recmoment.net)
+
 Free-tier backlink intelligence, packaged as an AI-agent skill. Inspired by
 [OpenSEO](https://github.com/every-app/open-seo)'s approach — open source,
 BYOK optional, no forced subscription — but focused on one job: **finding
@@ -34,6 +39,38 @@ cp -r backlink-radar ~/.claude/skills/
 ```
 
 Or paste `SKILL.md` into any LLM's system/project prompt.
+
+## Connect your agent to the Backlink Hub (MCP)
+
+The Hub's hosted MCP server plugs straight into your agent — one config
+block, no local install:
+
+```json
+{
+  "mcpServers": {
+    "backlink-hub": {
+      "type": "http",
+      "url": "https://hub.recmoment.net/mcp",
+      "headers": { "Authorization": "Bearer rmh_YOUR_KEY_HERE" }
+    }
+  }
+}
+```
+
+Get a **free API key** at [recmoment.net/hub-portal](https://recmoment.net/hub-portal/)
+(email → key, 30 seconds), then drop the config into your client:
+
+| Client | Where the config goes |
+|---|---|
+| **Cursor** | `.cursor/mcp.json` in your project (or global Settings → MCP) |
+| **Claude Code** | `claude mcp add --transport http backlink-hub https://hub.recmoment.net/mcp --header "Authorization: Bearer rmh_YOUR_KEY_HERE"` |
+| **Claude Desktop** | Settings → Connectors → Add custom connector → paste the URL + key |
+| **Windsurf / others** | Any MCP client that speaks streamable HTTP — same `mcp.json` shape as the [mcp.json](mcp.json) in this repo |
+
+Tools you get: `hub_search_sites`, `hub_submit_site`, `hub_request_match`,
+`hub_analyze_content`, `hub_report_outcome`, `hub_publisher_wishlist`,
+plus points/referral endpoints over REST. Free plan includes 20 directory
+queries/month; points or membership unlock matching.
 
 ## Use
 
