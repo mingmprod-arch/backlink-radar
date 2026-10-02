@@ -83,10 +83,16 @@ Run `scripts/site_audit.py <url>` — no API keys needed. It checks:
 - **GEO (AI-engine readiness)**: whether robots.txt blocks AI crawlers
   (GPTBot, ClaudeBot, PerplexityBot, Google-Extended…), llms.txt,
   sitemap, whether content is server-rendered (AI crawlers rarely run
-  JS), and answer-style structure (FAQPage schema, question-form H2s).
+  JS), answer-style structure (FAQPage schema, question-form H2s),
+  answer-first opening blocks, freshness signals (visible date +
+  dateModified schema), author bylines (E-E-A-T), outbound citations to
+  primary sources, and scannable lists/tables.
 
 Every failing check comes with a one-line fix. Present results as a
-checklist; offer to fix the issues if the user owns the site.
+checklist; offer to fix the issues if the user owns the site. The
+evidence behind each check is in `references/geo-playbook.md` — read it
+before advising on GEO strategy (brand mentions, quotable passages and
+original data are the three highest-leverage levers).
 
 ## Workflow 6 — Domain authority check (free)
 

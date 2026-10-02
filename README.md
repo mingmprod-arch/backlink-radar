@@ -50,7 +50,7 @@ Ask your agent things like:
 |---|---|
 | `scripts/commoncrawl_backlinks.py <domain>` | Free extraction recipes (webgraph / BigQuery) for referring domains; `--coverage` = live crawl-presence check |
 | `scripts/gsc_links_report.py <gsc-export.csv>` | Concentration + link-magnet analysis of your GSC links export |
-| `scripts/site_audit.py <url>` | On-page SEO + GEO (AI-engine readiness) audit, zero API keys |
+| `scripts/site_audit.py <url>` | 19-check on-page SEO + GEO (AI-engine readiness) audit, zero API keys |
 | `scripts/dr_check.py <domain>` | Domain-authority signals: Open PageRank (free key) + Common Crawl presence |
 
 ## Data honesty

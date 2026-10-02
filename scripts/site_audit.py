@@ -146,6 +146,43 @@ def audit(url):
           f"FAQ schema: {faq}, question H2s: {q_h2}",
           "Add FAQPage schema / question-form H2s — AI answers quote these directly" if not (faq or q_h2) else None)
 
+    # answer-first block: is the opening paragraph short and direct (AIO chunk retrieval)
+    paras = re.findall(r"<p[^>]*>(.*?)</p>", html, re.I | re.S)
+    first_p_words = len(re.sub(r"<[^>]+>", "", paras[0]).split()) if paras else 0
+    has_takeaway = bool(re.search(r"(?i)(key takeaway|tl;dr|in short|summary|重點|摘要)", html))
+    check(results, "geo", "answer-first block", (0 < first_p_words <= 60) or has_takeaway,
+          f"first paragraph ~{first_p_words} words; explicit takeaway block: {has_takeaway}",
+          "Open with a 40–60 word direct answer, or add a 'Key takeaway' box per section" if not ((0 < first_p_words <= 60) or has_takeaway) else None)
+
+    # freshness: AI citations skew toward content updated in the last 2-3 months
+    has_date_schema = bool(re.search(r'"date(Published|Modified)"', html))
+    has_visible_date = bool(re.search(r"(?i)(updated|last modified|更新)[^<]{0,40}20[12]\d", html)) or bool(re.search(r"20[12]\d[-/年][01]?\d", html))
+    check(results, "geo", "freshness signal", has_date_schema or has_visible_date,
+          f"datePublished/dateModified schema: {has_date_schema}, visible date: {has_visible_date}",
+          "Show a visible 'Last updated' date + dateModified schema; refresh top pages every 3–6 months" if not (has_date_schema or has_visible_date) else None)
+
+    # E-E-A-T: author byline / Person schema
+    has_author = bool(meta(html, "author")) or bool(re.search(r'rel=["\']author', html, re.I)) or \
+        any(t == "Person" for t in ld_types) or bool(re.search(r'"author"', html))
+    check(results, "geo", "author byline (E-E-A-T)", has_author,
+          "author signal found" if has_author else "no author byline / Person schema",
+          "Name a real author with credentials — AI engines weight credible, attributable sources" if not has_author else None)
+
+    # outbound citations: studies show citing authoritative sources + stats lifts AI citation rates 30-40%
+    links_out = re.findall(r'<a\b[^>]+href=["\'](https?://[^"\']+)', html, re.I)
+    ext = {urllib.parse.urlparse(l).netloc.replace("www.", "") for l in links_out
+           if urllib.parse.urlparse(l).netloc.replace("www.", "") != parsed.netloc.replace("www.", "")}
+    check(results, "geo", "outbound citations", len(ext) >= 2,
+          f"{len(ext)} external domains cited",
+          "Cite primary sources with years (studies, official docs) — cited content earns more AI citations" if len(ext) < 2 else None)
+
+    # scannable structure: lists / tables (easier for AI to extract)
+    n_lists = len(re.findall(r"<[uo]l\b", html, re.I))
+    n_tables = len(re.findall(r"<table\b", html, re.I))
+    check(results, "geo", "scannable lists/tables", (n_lists + n_tables) >= 2,
+          f"{n_lists} lists, {n_tables} tables",
+          "Use bullet lists and comparison tables — AI models extract these more reliably than dense prose" if (n_lists + n_tables) < 2 else None)
+
     return {"url": final_url, "status": status, "results": results}
 
 def main():
