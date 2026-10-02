@@ -33,7 +33,6 @@ function recmoment_hub_portal_shortcode() {
       .rmp .chip{display:inline-block;background:#1f6feb33;border:1px solid #1f6feb;color:#58a6ff;font-size:11px;border-radius:10px;padding:2px 8px;font-family:ui-monospace,Menlo,monospace;margin-left:8px}
       .rmp .hint{font-size:12px;color:#8b949e;line-height:1.6}
       .rmp .hidden{display:none}
-      .rmp .rmp-paid{background:#3fb9501a;border:1px solid #3fb950;color:#3fb950;border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:14px;line-height:1.6}
     </style>
 
     <div class="rmp-top">
@@ -43,10 +42,6 @@ function recmoment_hub_portal_shortcode() {
         <button id="rmLangEn" onclick="rmSetLang('en')">EN</button>
       </div>
     </div>
-
-    <?php if (isset($_GET['paid'])): ?>
-    <div class="rmp-paid" id="rmPaidBanner"><span data-i18n="paid">✓ 付款成功！多謝支持。升級會喺 24 小時內生效，請用付款 email 喺下面 connect 你嘅 key。</span></div>
-    <?php endif; ?>
 
     <div class="rmp-card">
       <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t1">取得 API key（免費）</span><span class="chip">POST /hub/public/signup</span></div>
