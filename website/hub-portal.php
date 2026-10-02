@@ -157,31 +157,46 @@ function recmoment_hub_portal_shortcode() {
           rmLoadRuns();
         }).catch(function(){});
       };
-      // ── Runs（Apify 式）：表格 / JSON 切換 + Export ──
+      // ── Runs（Apify 式）：DOM 構建（避免 wpautop 吃掉 block 標籤字串）──
       var rmRunsData=null,rmRunsJsonMode=false;
-      function rmEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-      function rmPill(status){
-        if(/published|approved|verified/.test(status))return '<span class="pill ok">'+rmEsc(status)+'</span>';
-        if(/reject|fail|no_reply/.test(status))return '<span class="pill no">'+rmEsc(status)+'</span>';
-        return '<span class="pill wait">'+rmEsc(status)+'</span>';
+      function rmEl(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+      function rmPillEl(status){
+        var cls=/published|approved|verified/.test(status)?'pill ok':(/reject|fail|no_reply/.test(status)?'pill no':'pill wait');
+        return rmEl('span',cls,status);
       }
       function rmRenderRuns(){
         var box=document.getElementById('rmRunsTable'),pre=document.getElementById('rmRunsJson');
+        box.textContent='';
         if(rmRunsJsonMode){
-          box.innerHTML='';pre.classList.remove('hidden');
+          pre.classList.remove('hidden');
           pre.textContent=JSON.stringify(rmRunsData,null,2);
           document.getElementById('rmRunsViewBtn').textContent='Table';return;
         }
         pre.classList.add('hidden');document.getElementById('rmRunsViewBtn').textContent='JSON';
         var runs=(rmRunsData&&rmRunsData.runs)||[];
-        if(!runs.length){box.innerHTML='<p class="hint">'+T('noruns')+'</p>';return}
-        var h='<table class="runs"><tr><th>run</th><th>role</th><th>target</th><th>keywords</th><th>status</th><th>outcome</th><th>created</th></tr>';
+        if(!runs.length){box.appendChild(rmEl('div','hint',T('noruns')));return}
+        var tb=rmEl('table','runs'),tr=rmEl('tr');
+        ['run','role','target','keywords','status','outcome','created'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
+        tb.appendChild(tr);
         runs.forEach(function(r){
-          var st=r.proposals.map(function(p){return rmPill(p.status)}).join(' ');
-          var oc=r.outcomes.length?r.outcomes.map(function(o){var t=o.outcome+(o.verified?' ✓verified':'');return o.liveUrl?'<a href="'+rmEsc(o.liveUrl)+'" target="_blank" style="color:#58a6ff">'+rmEsc(t)+'</a>':rmEsc(t)}).join('<br>'):'<span style="color:#8b949e">—</span>';
-          h+='<tr><td class="mono">'+rmEsc(r.id.replace('match_',''))+'</td><td>'+rmEsc(r.role)+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+rmEsc(r.targetUrl)+'</td><td>'+rmEsc((r.keywords||[]).join(', '))+'</td><td>'+st+'</td><td>'+oc+'</td><td class="mono" style="color:#8b949e">'+rmEsc((r.createdAt||'').slice(0,10))+'</td></tr>';
+          var row=rmEl('tr');
+          row.appendChild(rmEl('td','mono',r.id.replace('match_','')));
+          row.appendChild(rmEl('td',null,r.role));
+          var tdT=rmEl('td');tdT.style.cssText='max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';tdT.textContent=r.targetUrl;row.appendChild(tdT);
+          row.appendChild(rmEl('td',null,(r.keywords||[]).join(', ')));
+          var tdS=rmEl('td');r.proposals.forEach(function(p){tdS.appendChild(rmPillEl(p.status));tdS.appendChild(document.createTextNode(' '))});row.appendChild(tdS);
+          var tdO=rmEl('td');
+          if(r.outcomes.length){r.outcomes.forEach(function(o,i){
+            if(i)tdO.appendChild(rmEl('br'));
+            var t=o.outcome+(o.verified?' ✓verified':'');
+            if(o.liveUrl){var a=rmEl('a',null,t);a.href=o.liveUrl;a.target='_blank';a.style.color='#58a6ff';tdO.appendChild(a)}
+            else tdO.appendChild(document.createTextNode(t));
+          })}else{var s=rmEl('span',null,'—');s.style.color='#8b949e';tdO.appendChild(s)}
+          row.appendChild(tdO);
+          var tdD=rmEl('td','mono',(r.createdAt||'').slice(0,10));tdD.style.color='#8b949e';row.appendChild(tdD);
+          tb.appendChild(row);
         });
-        box.innerHTML=h+'</table>';
+        box.appendChild(tb);
       }
       window.rmLoadRuns=function(){
         fetch(API+'/v1/hub/runs',{headers:authed()}).then(function(r){return r.json()})
