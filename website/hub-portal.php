@@ -1,5 +1,5 @@
 
-// ── Hub 會員 Portal（/hub-portal/）：GitHub 風 dark dev 介面 + 中英切換 ──
+// ── Hub 會員 Portal（/hub-portal/）：GitHub 風 dark dev 介面 + 中英切換 + Resend 式 onboarding ──
 function recmoment_hub_portal_shortcode() {
     ob_start(); ?>
     <div id="rmPortal" class="rmp">
@@ -20,7 +20,7 @@ function recmoment_hub_portal_shortcode() {
       .rmp label{display:block;font-size:12px;color:#8b949e;margin:10px 0 4px;font-weight:600}
       .rmp input,.rmp select{width:100%;background:#010409;border:1px solid #30363d;color:#c9d1d9;border-radius:6px;padding:8px 12px;font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
       .rmp input:focus,.rmp select:focus{outline:none;border-color:#58a6ff}
-      .rmp .btn{background:#238636;color:#fff;border:1px solid rgba(240,246,252,.1);border-radius:6px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px}
+      .rmp .btn{background:#238636;color:#fff;border:1px solid rgba(240,246,252,.1);border-radius:6px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;display:inline-block}
       .rmp .btn:hover{background:#2ea043}
       .rmp .btn.ghost{background:#21262d}
       .rmp .btn.ghost:hover{background:#30363d}
@@ -40,6 +40,17 @@ function recmoment_hub_portal_shortcode() {
       .rmp .pill.ok{background:#3fb9501a;color:#3fb950;border:1px solid #3fb950}
       .rmp .pill.wait{background:#d299221a;color:#d29922;border:1px solid #d29922}
       .rmp .pill.no{background:#f851491a;color:#f85149;border:1px solid #f85149}
+      .rmp .step{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #21262d}
+      .rmp .step:last-child{border-bottom:0}
+      .rmp .step .n{width:24px;height:24px;border-radius:50%;border:1px solid #30363d;color:#8b949e;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;font-family:ui-monospace,Menlo,monospace;margin-top:1px}
+      .rmp .step.done .n{background:#238636;border-color:#238636;color:#fff}
+      .rmp .step .t{font-size:14px;color:#f0f6fc;font-weight:600}
+      .rmp .step.done .t{color:#3fb950}
+      .rmp .step .d{font-size:12px;color:#8b949e;margin-top:3px;line-height:1.5}
+      .rmp .step .act{margin-left:auto;flex:none}
+      .rmp .sitecard{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:13px}
+      .rmp .sitecard b{color:#58a6ff;font-family:ui-monospace,Menlo,monospace}
+      .rmp .sitecard .meta{color:#8b949e;font-size:12px;margin-top:3px}
     </style>
 
     <div class="rmp-top">
@@ -64,11 +75,20 @@ function recmoment_hub_portal_shortcode() {
       </div>
     </div>
 
+    <div class="rmp-card hidden" id="portal-onboard">
+      <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t0">快速上手：3 步出第一個 match</span><span class="chip">getting started</span></div>
+      <div class="rmp-card-b">
+        <div id="rmSteps"></div>
+        <div id="rmTryOut"></div>
+      </div>
+    </div>
+
     <div class="rmp-card hidden" id="portal-dash">
-      <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t2">帳戶狀態</span><span class="chip">GET /v1/hub/points</span></div>
+      <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t2">帳戶狀態</span><span class="chip">GET /v1/hub/me</span></div>
       <div class="rmp-card-b">
         <div class="stat"><b id="rmPoints">–</b><span data-i18n="s1">積分結餘</span></div>
         <div class="stat"><b id="rmMatches">–</b><span>matches = 20 pts</span></div>
+        <div class="stat"><b id="rmQuota">–</b><span data-i18n="s2">本月查詢</span></div>
         <p class="hint" style="margin-top:12px"><span data-i18n="ref">推薦碼</span>: <code id="rmRef" class="mono">–</code></p>
         <p class="hint" id="rmHist"></p>
       </div>
@@ -97,6 +117,8 @@ function recmoment_hub_portal_shortcode() {
         <button class="btn" onclick="rmSetWishlist()" data-i18n="b4">$ wishlist --set</button>
         <div class="msg" id="rmWishMsg"></div>
       </div>
+    </div>
+
     <div class="rmp-card hidden" id="portal-runs">
       <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t5">Runs（配對紀錄）</span><span class="chip">GET /v1/hub/runs</span>
         <span style="margin-left:auto;display:flex;gap:6px">
@@ -108,13 +130,16 @@ function recmoment_hub_portal_shortcode() {
         <div id="rmRunsTable"></div>
         <pre id="rmRunsJson" class="hidden mono" style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;font-size:12px;overflow:auto;max-height:400px;color:#c9d1d9"></pre>
       </div>
+    </div>
+
     <div class="rmp-card hidden" id="portal-upgrade">
       <div class="rmp-card-h"><span class="dot"></span><span data-i18n="t6">升級解鎖</span><span class="chip">stripe</span></div>
       <div class="rmp-card-b">
-        <p class="hint" data-i18n="d6">Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。付款後 plan 自動升級。</p>
+        <p class="hint" data-i18n="d6">Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。500 積分 $29 一次性：唔想訂閱就買分。付款後 plan 自動升級。</p>
         <a class="btn ghost" style="text-decoration:none;margin-right:8px" href="https://buy.stripe.com/dRm00c6BzcF563k2FC1Jm01" target="_blank">Member $19</a>
         <a class="btn" style="text-decoration:none;margin-right:8px" href="https://buy.stripe.com/fZuaEQe41eNd9fwa841Jm02" target="_blank">Pro $49/月</a>
-        <a class="btn ghost" style="text-decoration:none" href="https://buy.stripe.com/5kQ5kw6BzawX77ocgc1Jm03" target="_blank">Agency $199/月</a>
+        <a class="btn ghost" style="text-decoration:none;margin-right:8px" href="https://buy.stripe.com/5kQ5kw6BzawX77ocgc1Jm03" target="_blank">Agency $199/月</a>
+        <a class="btn ghost" style="text-decoration:none" href="https://buy.stripe.com/3cI28kaRPawX2R8gws1Jm04" target="_blank">500 pts / $29</a>
       </div>
     </div>
     </div>
@@ -123,10 +148,12 @@ function recmoment_hub_portal_shortcode() {
     (function(){
       var API='https://hub.recmoment.net';
       var I18N={
-        zh:{t1:'取得 API key（免費）',d1:'免費計劃：目錄查詢每月 20 次。之後用積分解鎖配對——交站賺分（+0.5/DR）、成交驗證 +15。',b1:'$ join --free',d1b:'已經有 key？直接連接：',b1b:'connect',t2:'帳戶狀態',s1:'積分結餘',ref:'推薦碼',t3:'提交網站賺分',d3:'交一個你擁有、肯收投稿嘅站。DR 越高分越多（封頂 50）。逐站審核，PBN 拒收，同一 domain 全網只計一次分。',b3:'$ submit --earn',t4:'Wishlist（出版方）',d4:'話俾買家知你而家想收咩題——撞中 wishlist 嘅配對請求 +3 分排前。',l4:'想收嘅題（逗號分隔）',b4:'$ wishlist --set',
-          neterr:'網絡錯誤，稍後再試',keybad:'key 格式唔啱（rmh_ 開頭 48 位 hex）',linked:'✓ 已連接',keyonce:'✓ 你嘅 key（只顯示一次，請即抄低）：',subok:'✓ 已提交，賺咗 ',pts:' 分；審核後上架。',wishok:'✓ 已更新：',recent:'最近：',t5:'Runs（配對紀錄）',noruns:'仲未有配對紀錄。用 match 工具發起第一次配對啦。',t6:'升級解鎖',d6:'Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。付款後 plan 自動升級。',copied:'✓ 已複製',paid:'✓ 付款成功！多謝支持。升級會喺 24 小時內生效，請用付款 email 喺下面 connect 你嘅 key。'},
-        en:{t1:'Get your API key (free)',d1:'Free plan: 20 directory queries/month. Unlock matches with points — submit sites (+0.5/DR), verified outcomes +15.',b1:'$ join --free',d1b:'Already have a key? Connect it:',b1b:'connect',t2:'Account',s1:'points balance',ref:'Referral link',t3:'Submit a site, earn points',d3:'Submit a site you own that accepts contributions. Higher DR earns more (cap 50). Every site is vetted — PBNs rejected, one point grant per domain network-wide.',b3:'$ submit --earn',t4:'Wishlist (publishers)',d4:'Tell buyers what topics you want right now — matches hitting your wishlist score +3.',l4:'Wanted topics (comma-separated)',b4:'$ wishlist --set',
-          neterr:'Network error, try again later',keybad:'Invalid key format (rmh_ + 48 hex)',linked:'✓ Connected',keyonce:'✓ Your key (shown once — save it now): ',subok:'✓ Submitted, earned ',pts:' pts; listed after review.',wishok:'✓ Updated: ',recent:'latest: ',t5:'Runs (match history)',noruns:'No runs yet — fire your first match request to get going.',t6:'Upgrade',d6:'Member $19 one-time: 100 queries/mo. Pro $49/mo: unlimited queries + auto-match. Agency $199/mo: 25 sites + white-label reports. Plan upgrades automatically after payment.',copied:'✓ Copied',paid:'✓ Payment received — thank you! Your upgrade activates within 24 hours. Connect your key below with the email you paid with.'}
+        zh:{t1:'取得 API key（免費）',d1:'免費計劃：目錄查詢每月 20 次。之後用積分解鎖配對——交站賺分（+0.5/DR）、成交驗證 +15。',b1:'$ join --free',d1b:'已經有 key？直接連接：',b1b:'connect',t2:'帳戶狀態',s1:'積分結餘',s2:'本月查詢',ref:'推薦碼',t3:'提交網站賺分',d3:'交一個你擁有、肯收投稿嘅站。DR 越高分越多（封頂 50）。逐站審核，PBN 拒收，同一 domain 全網只計一次分。',b3:'$ submit --earn',t4:'Wishlist（出版方）',d4:'話俾買家知你而家想收咩題——撞中 wishlist 嘅配對請求 +3 分排前。',l4:'想收嘅題（逗號分隔）',b4:'$ wishlist --set',
+          neterr:'網絡錯誤，稍後再試',keybad:'key 格式唔啱（rmh_ 開頭 48 位 hex）',linked:'✓ 已連接',keyonce:'✓ 你嘅 key（只顯示一次，請即抄低）：',subok:'✓ 已提交，賺咗 ',pts:' 分；審核後上架。',wishok:'✓ 已更新：',recent:'最近：',t5:'Runs（配對紀錄）',noruns:'仲未有配對紀錄。用 match 工具發起第一次配對啦。',t6:'升級解鎖',d6:'Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。500 積分 $29 一次性：唔想訂閱就買分。付款後 plan 自動升級。',copied:'✓ 已複製',paid:'✓ 付款成功！多謝支持。升級會喺 24 小時內生效，請用付款 email 喺下面 connect 你嘅 key。',
+          t0:'快速上手：3 步出第一個 match',st1t:'取得 API key',st1d:'免費帳戶即開即用，key 只顯示一次。',st2t:'駁你嘅 AI agent',st2d:'一撳複製 MCP 設定 + 示範指令，貼落 Claude / Cursor / Kimi 即用。',st3t:'跑第一次目錄查詢',st3d:'唔使寫 code——撳掣即場試 API，睇返 16 個已審核出版站。',st4t:'發第一個配對',st4d:'喺你嘅 agent 講：用 hub_request_match 幫我搵出版方。成交驗證雙方 +15 分。',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'跑緊…',tryusage:'本月用量'},
+        en:{t1:'Get your API key (free)',d1:'Free plan: 20 directory queries/month. Unlock matches with points — submit sites (+0.5/DR), verified outcomes +15.',b1:'$ join --free',d1b:'Already have a key? Connect it:',b1b:'connect',t2:'Account',s1:'points balance',s2:'queries this month',ref:'Referral link',t3:'Submit a site, earn points',d3:'Submit a site you own that accepts contributions. Higher DR earns more (cap 50). Every site is vetted — PBNs rejected, one point grant per domain network-wide.',b3:'$ submit --earn',t4:'Wishlist (publishers)',d4:'Tell buyers what topics you want right now — matches hitting your wishlist score +3.',l4:'Wanted topics (comma-separated)',b4:'$ wishlist --set',
+          neterr:'Network error, try again later',keybad:'Invalid key format (rmh_ + 48 hex)',linked:'✓ Connected',keyonce:'✓ Your key (shown once — save it now): ',subok:'✓ Submitted, earned ',pts:' pts; listed after review.',wishok:'✓ Updated: ',recent:'latest: ',t5:'Runs (match history)',noruns:'No runs yet — fire your first match request to get going.',t6:'Upgrade',d6:'Member $19 one-time: 100 queries/mo. Pro $49/mo: unlimited queries + auto-match. Agency $199/mo: 25 sites + white-label reports. 500 points for $29 one-time — no subscription needed. Plan upgrades automatically after payment.',copied:'✓ Copied',paid:'✓ Payment received — thank you! Your upgrade activates within 24 hours. Connect your key below with the email you paid with.',
+          t0:'Quickstart: your first match in 3 steps',st1t:'Get your API key',st1d:'Free account, instant — the key is shown once.',st2t:'Connect your AI agent',st2d:'One click copies the MCP config + sample prompts. Paste into Claude / Cursor / Kimi and go.',st3t:'Run your first directory search',st3d:'No code needed — try the API right here and see 16 vetted publisher sites.',st4t:'Fire your first match',st4d:'Tell your agent: use hub_request_match to find publishers for me. Verified outcomes earn both sides +15 pts.',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'running…',tryusage:'usage this month'}
       };
       window.rmSetLang=function(l){
         var d=I18N[l]||I18N.zh;
@@ -134,12 +161,14 @@ function recmoment_hub_portal_shortcode() {
         document.getElementById('rmLangZh').className=l==='zh'?'on':'';
         document.getElementById('rmLangEn').className=l==='en'?'on':'';
         localStorage.setItem('rmHubLang',l);
+        rmRenderOnboard();
       };
       function lang(){return localStorage.getItem('rmHubLang')||'zh'}
       function T(k){return (I18N[lang()]||I18N.zh)[k]||k}
       function key(){return localStorage.getItem('rmHubKey')||''}
       function msg(id,text,ok){var e=document.getElementById(id);e.textContent=text;e.className='msg '+(ok?'ok':'err')}
       function authed(){return {'content-type':'application/json','authorization':'Bearer '+key()}}
+      function rmEl(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
       window.rmSignup=function(){
         var email=document.getElementById('rmEmail').value.trim();
         fetch(API+'/hub/public/signup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:email})})
@@ -156,21 +185,96 @@ function recmoment_hub_portal_shortcode() {
         if(!/^rmh_[a-f0-9]{48}$/i.test(k))return msg('rmJoinMsg',T('keybad'),false);
         localStorage.setItem('rmHubKey',k);msg('rmJoinMsg',T('linked'),true);rmLoadDash();
       };
+      // ── Resend 式 onboarding checklist ──────────────────────────────
+      window.rmRenderOnboard=function(){
+        var box=document.getElementById('rmSteps');if(!box)return;
+        box.textContent='';
+        var hasKey=!!key();
+        var copiedAI=localStorage.getItem('rmHubCopiedAI')==='1';
+        var triedSearch=localStorage.getItem('rmHubFirstSearch')==='1';
+        var hasRun=(window.rmRunsData&&(window.rmRunsData.total||0)>0);
+        var steps=[
+          {done:hasKey,t:T('st1t'),d:T('st1d'),act:null},
+          {done:copiedAI,t:T('st2t'),d:T('st2d'),act:'copyai'},
+          {done:triedSearch,t:T('st3t'),d:T('st3d'),act:'tryit'},
+          {done:hasRun,t:T('st4t'),d:T('st4d'),act:null}
+        ];
+        steps.forEach(function(s,i){
+          var row=rmEl('div','step'+(s.done?' done':''));
+          row.appendChild(rmEl('div','n',s.done?'✓':String(i+1)));
+          var mid=rmEl('div');
+          mid.appendChild(rmEl('div','t',s.t));
+          mid.appendChild(rmEl('div','d',s.d));
+          row.appendChild(mid);
+          if(s.act==='copyai'&&hasKey){
+            var b=rmEl('button','btn ghost',T('copyai'));b.style.cssText='padding:6px 14px;font-size:12px;margin-top:0';
+            b.onclick=rmCopyForAI;var sp=rmEl('span','act');sp.appendChild(b);row.appendChild(sp);
+          }
+          if(s.act==='tryit'&&hasKey){
+            var b2=rmEl('button','btn',T('tryit'));b2.style.cssText='padding:6px 14px;font-size:12px;margin-top:0';
+            b2.onclick=rmTrySearch;var sp2=rmEl('span','act');sp2.appendChild(b2);row.appendChild(sp2);
+          }
+          box.appendChild(row);
+        });
+      };
+      window.rmCopyForAI=function(){
+        var k=key();
+        var txt='Connect your AI agent to the Backlink Hub MCP server:\n\n'
+          +'{\n  "mcpServers": {\n    "backlink-hub": {\n      "type": "http",\n'
+          +'      "url": "https://hub.recmoment.net/mcp",\n'
+          +'      "headers": { "Authorization": "Bearer '+k+'" }\n    }\n  }\n}\n\n'
+          +'Then ask your agent:\n'
+          +'1. "Use hub_my_account to show my plan, points and query usage."\n'
+          +'2. "Use hub_search_sites to list vetted seo blogs that accept guest posts."\n'
+          +'3. "Use hub_analyze_content on my draft at https://yourblog.com/post and find matching publishers."\n'
+          +'4. "Use hub_request_match with my target URL and keywords to draft placement proposals."';
+        navigator.clipboard.writeText(txt).then(function(){
+          localStorage.setItem('rmHubCopiedAI','1');rmRenderOnboard();
+        });
+      };
+      window.rmTrySearch=function(){
+        var out=document.getElementById('rmTryOut');
+        out.textContent=T('trywait');
+        fetch(API+'/v1/hub/sites?limit=3',{headers:authed()})
+        .then(function(r){return r.json()}).then(function(d){
+          out.textContent='';
+          if(d.error){out.appendChild(rmEl('div','hint',d.error));return}
+          (d.sites||[]).forEach(function(s){
+            var c=rmEl('div','sitecard');
+            c.appendChild(rmEl('b',null,s.url));
+            var meta='niche: '+s.niche+'  ·  accepts: '+(s.accepts||[]).join('/')+'  ·  DR: '+(s.dr==null?'—':s.dr)
+              +'  ·  response rate: '+(s.responseRate==null?'new':Math.round(s.responseRate*100)+'%');
+            if(s.wishlist&&s.wishlist.length)meta+='  ·  wants: '+s.wishlist.slice(0,3).join(', ');
+            c.appendChild(rmEl('div','meta',meta));
+            out.appendChild(c);
+          });
+          if(d.usage&&d.usage!=='unlimited'){
+            out.appendChild(rmEl('p','hint',T('tryusage')+': '+d.usage.usedThisMonth+' / '+d.usage.monthlyAllowance+(d.usage.bonusQueriesLeft?' (+'+d.usage.bonusQueriesLeft+' bonus)':'')));
+          }
+          localStorage.setItem('rmHubFirstSearch','1');rmRenderOnboard();
+        }).catch(function(){out.textContent=T('neterr')});
+      };
       window.rmLoadDash=function(){
         fetch(API+'/v1/hub/points',{headers:authed()}).then(function(r){if(!r.ok)throw 0;return r.json()})
         .then(function(d){
           document.getElementById('rmPoints').textContent=d.balance;
           document.getElementById('rmMatches').textContent=Math.floor(d.balance/20);
           document.getElementById('rmHist').textContent=d.history.length?(T('recent')+d.history[0].reason):'';
+          fetch(API+'/v1/hub/me',{headers:authed()}).then(function(r){return r.json()})
+          .then(function(me){
+            var q=me.directoryQueries;
+            document.getElementById('rmQuota').textContent=(q==='unlimited')?'∞':(q.usedThisMonth+'/'+q.monthlyAllowance);
+          }).catch(function(){});
           fetch(API+'/v1/hub/referral-code',{headers:authed()}).then(function(r){return r.json()})
           .then(function(r2){document.getElementById('rmRef').textContent=r2.shareUrl||r2.code});
-          ['portal-dash','portal-submit','portal-wish','portal-runs','portal-upgrade'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
+          ['portal-onboard','portal-dash','portal-submit','portal-wish','portal-runs','portal-upgrade'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
+          rmRenderOnboard();
           rmLoadRuns();
         }).catch(function(){});
       };
       // ── Runs（Apify 式）：DOM 構建（避免 wpautop 吃掉 block 標籤字串）──
-      var rmRunsData=null,rmRunsJsonMode=false;
-      function rmEl(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+      var rmRunsJsonMode=false;
+      window.rmRunsData=null;
       function rmPillEl(status){
         var cls=/published|approved|verified/.test(status)?'pill ok':(/reject|fail|no_reply/.test(status)?'pill no':'pill wait');
         return rmEl('span',cls,status);
@@ -180,11 +284,11 @@ function recmoment_hub_portal_shortcode() {
         box.textContent='';
         if(rmRunsJsonMode){
           pre.classList.remove('hidden');
-          pre.textContent=JSON.stringify(rmRunsData,null,2);
+          pre.textContent=JSON.stringify(window.rmRunsData,null,2);
           document.getElementById('rmRunsViewBtn').textContent='Table';return;
         }
         pre.classList.add('hidden');document.getElementById('rmRunsViewBtn').textContent='JSON';
-        var runs=(rmRunsData&&rmRunsData.runs)||[];
+        var runs=(window.rmRunsData&&window.rmRunsData.runs)||[];
         if(!runs.length){box.appendChild(rmEl('div','hint',T('noruns')));return}
         var tb=rmEl('table','runs'),tr=rmEl('tr');
         ['run','role','target','keywords','status','outcome','created'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
@@ -211,11 +315,11 @@ function recmoment_hub_portal_shortcode() {
       }
       window.rmLoadRuns=function(){
         fetch(API+'/v1/hub/runs',{headers:authed()}).then(function(r){return r.json()})
-        .then(function(d){rmRunsData=d;rmRenderRuns()}).catch(function(){});
+        .then(function(d){window.rmRunsData=d;rmRenderRuns();rmRenderOnboard()}).catch(function(){});
       };
       window.rmToggleRunsView=function(){rmRunsJsonMode=!rmRunsJsonMode;rmRenderRuns()};
       window.rmExportRuns=function(){
-        var blob=new Blob([JSON.stringify(rmRunsData,null,2)],{type:'application/json'});
+        var blob=new Blob([JSON.stringify(window.rmRunsData,null,2)],{type:'application/json'});
         var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backlink-hub-runs.json';a.click();
       };
       window.rmSubmitSite=function(){
