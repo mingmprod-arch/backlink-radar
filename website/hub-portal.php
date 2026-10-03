@@ -52,9 +52,9 @@ function recmoment_hub_portal_shortcode() {
       .rmp-sec-h .chip{margin-left:auto;font-size:10px;color:#555;border:1px solid #2a2a2a;padding:2px 8px;letter-spacing:.05em;white-space:nowrap}
       /* ── form ── */
       .rmp label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#555;margin:14px 0 5px}
-      .rmp input,.rmp select{width:100%;background:#000;border:1px solid #262626;color:#d4d4d4;border-radius:0;padding:9px 12px;font-size:13px;font-family:inherit}
-      .rmp input:focus,.rmp select:focus{outline:none;border-color:#00d9a3}
-      .rmp input::placeholder{color:#3d3d3d}
+      #rmPortal input[type="email"],#rmPortal input[type="text"],#rmPortal input[type="url"],#rmPortal input[type="number"],#rmPortal select{width:100%;background:#000!important;border:1px solid #262626!important;color:#d4d4d4!important;border-radius:0!important;padding:9px 12px!important;font-size:13px;font-family:inherit!important;box-shadow:none!important}
+      #rmPortal input:focus,#rmPortal select:focus{outline:none;border-color:#00d9a3!important}
+      #rmPortal input::placeholder{color:#3d3d3d}
       .rmp .btn{background:transparent;color:#00d9a3;border:1px solid #00d9a3;border-radius:0;padding:8px 18px;font-size:12px;font-family:inherit;font-weight:500;letter-spacing:.04em;cursor:pointer;margin-top:14px;display:inline-block}
       .rmp .btn:hover{background:#00d9a3;color:#000;text-decoration:none}
       .rmp .btn.ghost{color:#999;border-color:#333}
