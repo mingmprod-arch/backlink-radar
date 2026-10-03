@@ -131,13 +131,7 @@ function recmoment_hub_portal_shortcode() {
         </div>
         <div class="rmp-sblk">
           <div class="rmp-lbl" data-i18n="nav">目錄</div>
-          <a class="rmp-nv" href="#portal-join"><i>01</i>credentials</a>
-          <a class="rmp-nv" href="#portal-onboard"><i>02</i>quickstart</a>
-          <a class="rmp-nv" href="#portal-dash"><i>03</i>account</a>
-          <a class="rmp-nv" href="#portal-submit"><i>04</i>submit-site</a>
-          <a class="rmp-nv" href="#portal-wish"><i>05</i>wishlist</a>
-          <a class="rmp-nv" href="#portal-runs"><i>06</i>runs</a>
-          <a class="rmp-nv" href="#portal-upgrade"><i>07</i>upgrade</a>
+          <a class="rmp-nv" href="#portal-join"><i>01</i>credentials</a><a class="rmp-nv" href="#portal-onboard"><i>02</i>quickstart</a><a class="rmp-nv" href="#portal-dash"><i>03</i>account</a><a class="rmp-nv" href="#portal-submit"><i>04</i>submit-site</a><a class="rmp-nv" href="#portal-wish"><i>05</i>wishlist</a><a class="rmp-nv" href="#portal-runs"><i>06</i>runs</a><a class="rmp-nv" href="#portal-upgrade"><i>07</i>upgrade</a>
         </div>
       </aside>
       <div class="rmp-vb"></div>
@@ -218,10 +212,7 @@ function recmoment_hub_portal_shortcode() {
       <div class="rmp-sec-h"><span class="idx">// 07</span><span class="ttl" data-i18n="t6">升級解鎖</span><span class="chip">stripe</span></div>
       <div>
         <p class="hint" data-i18n="d6">Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。500 積分 $29 一次性：唔想訂閱就買分。付款後 plan 自動升級。</p>
-        <a class="btn ghost" style="margin-right:8px" href="https://buy.stripe.com/dRm00c6BzcF563k2FC1Jm01" target="_blank">Member $19</a>
-        <a class="btn" style="margin-right:8px" href="https://buy.stripe.com/fZuaEQe41eNd9fwa841Jm02" target="_blank">Pro $49/月</a>
-        <a class="btn ghost" style="margin-right:8px" href="https://buy.stripe.com/5kQ5kw6BzawX77ocgc1Jm03" target="_blank">Agency $199/月</a>
-        <a class="btn ghost" href="https://buy.stripe.com/3cI28kaRPawX2R8gws1Jm04" target="_blank">500 pts / $29</a>
+        <a class="btn ghost" style="margin-right:8px" href="https://buy.stripe.com/dRm00c6BzcF563k2FC1Jm01" target="_blank">Member $19</a><a class="btn" style="margin-right:8px" href="https://buy.stripe.com/fZuaEQe41eNd9fwa841Jm02" target="_blank">Pro $49/月</a><a class="btn ghost" style="margin-right:8px" href="https://buy.stripe.com/5kQ5kw6BzawX77ocgc1Jm03" target="_blank">Agency $199/月</a><a class="btn ghost" href="https://buy.stripe.com/3cI28kaRPawX2R8gws1Jm04" target="_blank">500 pts / $29</a>
       </div>
     </div>
 
