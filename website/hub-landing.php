@@ -40,7 +40,7 @@ function recmoment_hub_shortcode() {
       <p class="eyebrow">Backlink Hub · by Rec Moment</p>
       <h1>Backlink 配對網絡，<br>由系統自動對接。</h1>
       <p class="copy">提交你嘅目標網址，系統自動喺已審核嘅網站目錄入面搵到主題相關嘅出版方、草擬插入建議、對方一撳批准、落地後爬蟲驗證、自動結算同出月報。你嘅 AI agent 仲可以經 MCP 或 REST API 直接用。</p>
-      <p style="margin-top:24px"><a class="btn" href="#hub-join">加入 Hub</a> <a class="btn ghost" href="https://recmoment.net/hub-portal/" style="margin-left:10px">會員中心</a></p>
+      <p style="margin-top:24px"><a class="btn" href="#hub-join">加入 Hub</a> <a class="btn ghost" href="https://recmoment.net/hub-portal/" style="margin-left:10px">免費攞 API key</a></p>
     </section>
 
     <section class="hairline" style="padding-top:64px">
@@ -118,7 +118,10 @@ function recmoment_hub_shortcode() {
       var sec=document.getElementById('hub-live'),box=document.getElementById('rmHubStats');
       if(!box)return;
       fetch('https://hub.recmoment.net/hub/public/stats').then(function(r){if(!r.ok)throw new Error();return r.json();}).then(function(d){
-        var items=[['收錄網站',d.sitesListed],['覆蓋 niche',d.nichesCovered],['累計配對',d.matchesCreated],['成功刊登',d.linksPublished]];
+        // 冷啟動期：0 嘅指標唔晒出嚟（陌生人見到 0 會扣分），只講有嘅
+        var items=[['收錄網站',d.sitesListed],['覆蓋 niche',d.nichesCovered]];
+        if(d.matchesCreated)items.push(['累計配對',d.matchesCreated]);
+        if(d.linksPublished)items.push(['成功刊登',d.linksPublished]);
         box.innerHTML=items.map(function(it){return '<div class="card" style="text-align:center"><div class="stat-num">'+it[1]+'</div><div class="stat-lbl">'+it[0]+'</div></div>';}).join('');
       }).catch(function(){if(sec)sec.style.display='none';});
     })();
