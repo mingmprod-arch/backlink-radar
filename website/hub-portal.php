@@ -5,6 +5,28 @@ function recmoment_hub_portal_shortcode() {
     <div id="rmPortal" class="rmp">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
     <style>
+      /* ── 成頁轉深色：Assembler theme header/footer 係透明底，靠 body 透色 ── */
+      body.page-id-128{background:#0a0a0a!important}
+      body.page-id-128 header.wp-block-template-part,
+      body.page-id-128 footer.wp-block-template-part{background:#0a0a0a!important}
+      body.page-id-128 header.wp-block-template-part{border-bottom:1px solid #1c1c1c}
+      body.page-id-128 footer.wp-block-template-part{border-top:1px solid #1c1c1c}
+      body.page-id-128 header.wp-block-template-part a,
+      body.page-id-128 header.wp-block-template-part p,
+      body.page-id-128 header.wp-block-template-part h1,
+      body.page-id-128 header.wp-block-template-part h2,
+      body.page-id-128 header.wp-block-template-part span{color:#c8c8c8!important}
+      body.page-id-128 header.wp-block-template-part a:hover{color:#00d9a3!important}
+      body.page-id-128 footer.wp-block-template-part,
+      body.page-id-128 footer.wp-block-template-part a,
+      body.page-id-128 footer.wp-block-template-part p,
+      body.page-id-128 footer.wp-block-template-part h2,
+      body.page-id-128 footer.wp-block-template-part h3,
+      body.page-id-128 footer.wp-block-template-part li,
+      body.page-id-128 footer.wp-block-template-part span{color:#666!important}
+      body.page-id-128 .entry-content{padding-top:10px!important}
+    </style>
+    <style>
       .rmp{background:#0a0a0a;color:#d4d4d4;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,'SF Mono',Menlo,monospace;font-size:13px;line-height:1.65;border:1px solid #222;max-width:1080px;margin:0 auto}
       .rmp *{box-sizing:border-box}
       .rmp ::selection{background:#00d9a3;color:#000}
