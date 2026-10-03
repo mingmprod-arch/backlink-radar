@@ -122,7 +122,12 @@ function recmoment_hub_shortcode() {
         var items=[['收錄網站',d.sitesListed],['覆蓋 niche',d.nichesCovered]];
         if(d.matchesCreated)items.push(['累計配對',d.matchesCreated]);
         if(d.linksPublished)items.push(['成功刊登',d.linksPublished]);
-        box.innerHTML=items.map(function(it){return '<div class="card" style="text-align:center"><div class="stat-num">'+it[1]+'</div><div class="stat-lbl">'+it[0]+'</div></div>';}).join('');
+        items.forEach(function(it){
+          var card=document.createElement('div');card.className='card';card.style.textAlign='center';
+          var num=document.createElement('div');num.className='stat-num';num.textContent=it[1];
+          var lbl=document.createElement('div');lbl.className='stat-lbl';lbl.textContent=it[0];
+          card.appendChild(num);card.appendChild(lbl);box.appendChild(card);
+        });
       }).catch(function(){if(sec)sec.style.display='none';});
     })();
     </script>
