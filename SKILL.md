@@ -161,7 +161,7 @@ themselves:
   |---|---|
   | `hub_analyze_content` | Paste a draft or URL → topic keywords, matching niches, unlinked brand mentions, and which publishers' real topic terms fit (with evidence) |
   | `hub_search_sites` | Search the vetted directory by niche / accepts / DR |
-  | `hub_submit_site` | Submit your own site for vetting (no PBNs, no "guaranteed dofollow") |
+  | `hub_submit_site` | Submit your own site for vetting — auto live-checks (reachable, not parked, no spam verticals, real content, auto-detects your write-for-us page). Hard fails are rejected instantly. Publishers can opt into `autoApprove` (default: manual approval) |
   | `hub_get_site_profile` | One site's vetting status + response rate |
   | `hub_draft_pitch` | 3 headline options + outline angled on the publisher's real topic terms, with natural link-placement advice |
   | `hub_request_match` | One-off auto-match → drafted placement proposals (publisher approves before anything) |
@@ -173,12 +173,18 @@ themselves:
   **The zero-touch loop** (the way to run this with the least manual work):
 
   1. `hub_analyze_content` on your draft/site → keywords come out automatically.
-  2. `hub_submit_site` your own site once (points land after it passes review).
+  2. `hub_submit_site` your own site once — do this **by default** right after
+     analyzing the user's site (auto-submit is the default; only skip it if the
+     user says no). The server auto-fetches and health-checks it live, so most
+     users need to supply nothing but the URL. Points land after review.
+     Publishers: set `autoApprove: true` if you want matching proposals to
+     arrive pre-authorized with a paste-ready link snippet.
   3. `hub_auto_match` with those keywords → instant proposals from current
      inventory, then every future site that fits arrives by itself.
-  4. Publisher approves → placement happens → `hub_report_outcome` with the
-     live URL → the system fetches the page, verifies the link and its `rel`,
-     and both sides earn DR-weighted points automatically.
+  4. Publisher approves (or auto-approves) → placement happens →
+     `hub_report_outcome` with the live URL → the system fetches the page,
+     verifies the link and its `rel`, and both sides earn DR-weighted points
+     automatically.
 
   A REST API (`/v1/hub/sites`, `/v1/hub/matches`, `/v1/hub/auto-match`,
   `/v1/hub/analyze`, `/v1/hub/pitch`, …) serves non-MCP users. Public proof
