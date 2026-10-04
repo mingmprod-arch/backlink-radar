@@ -1,0 +1,57 @@
+<style>
+#rmAudit{font-family:-apple-system,'PingFang HK','PingFang SC',sans-serif;max-width:720px;margin:0 auto;color:#1a1a2e}
+#rmAudit .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:28px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+#rmAudit h2{margin:0 0 6px;font-size:26px}
+#rmAudit .sub{color:#6b7280;margin-bottom:20px}
+#rmAudit input[type=url]{width:100%;padding:14px 16px;font-size:16px;border:2px solid #d1d5db;border-radius:10px;box-sizing:border-box}
+#rmAudit input:focus{border-color:#2563eb;outline:none}
+#rmAudit button{width:100%;margin-top:12px;padding:14px;font-size:16px;font-weight:600;color:#fff;background:#2563eb;border:0;border-radius:10px;cursor:pointer}
+#rmAudit button:disabled{opacity:.6;cursor:wait}
+#rmAudit .scoreRing{display:flex;align-items:center;gap:20px;margin:20px 0}
+#rmAudit .big{font-size:56px;font-weight:800}
+#rmAudit .grade{font-size:22px;font-weight:700;padding:6px 16px;border-radius:10px;color:#fff}
+#rmAudit .row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:15px}
+#rmAudit .ok{color:#059669;font-weight:700}
+#rmAudit .bad{color:#dc2626;font-weight:700}
+#rmAudit .tip{color:#6b7280;font-size:13px}
+#rmAudit .geo{margin-top:18px;background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:14px;font-size:14px}
+#rmAudit .cta{margin-top:22px;background:#1a1a2e;color:#fff;border-radius:12px;padding:22px;text-align:center}
+#rmAudit .cta a{display:inline-block;margin-top:10px;background:#2563eb;color:#fff;padding:12px 26px;border-radius:8px;text-decoration:none;font-weight:700}
+#rmAudit .err{color:#dc2626;margin-top:12px}
+</style>
+
+<div id="rmAudit"><div class="card">
+  <h2>免費 AI 網站體檢</h2>
+  <div class="sub">30 秒攞走你嘅 SEO + GEO（AI 搜尋優化）評分，15 項檢查即場跑。</div>
+  <input type="url" id="rmUrl" placeholder="https://你嘅網站.com" />
+  <button id="rmGo">即時體檢</button>
+  <div id="rmOut"></div>
+</div></div>
+
+<script>
+document.getElementById('rmGo').addEventListener('click', async () => {
+  const url = document.getElementById('rmUrl').value.trim();
+  const out = document.getElementById('rmOut');
+  const btn = document.getElementById('rmGo');
+  if (!/^https?:\/\//.test(url)) { out.innerHTML = '<div class="err">請輸入完整網址（https:// 開頭）</div>'; return; }
+  btn.disabled = true; btn.textContent = '檢查中…（約 10 秒）'; out.innerHTML = '';
+  try {
+    const r = await fetch('https://seo-hub-imbe.onrender.com/hub/public/audit', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url })
+    });
+    const d = await r.json();
+    if (!r.ok) { out.innerHTML = '<div class="err">' + (d.error || '檢查失敗，遲啲再試') + '</div>'; return; }
+    const gc = { A: '#059669', B: '#2563eb', C: '#d97706', D: '#ea580c', F: '#dc2626' }[d.grade];
+    let h = '<div class="scoreRing"><div class="big">' + d.score + '<span style="font-size:20px;color:#9ca3af">/100</span></div>' +
+      '<div class="grade" style="background:' + gc + '">' + d.grade + '</div>' +
+      '<div class="tip">' + d.url + '<br>伺服器回應 ' + d.fetchMs + 'ms</div></div>';
+    for (const c of d.checks)
+      h += '<div class="row"><span class="' + (c.ok ? 'ok' : 'bad') + '">' + (c.ok ? '✓' : '✗') + '</span>' +
+           '<div><b>' + c.name + '</b>' + (c.ok ? '' : '<div class="tip">' + c.tip + '</div>') + '</div></div>';
+    if (d.geoNote) h += '<div class="geo">⚠️ ' + d.geoNote + '</div>';
+    h += '<div class="cta">' + d.cta.text + '<br><a href="' + d.cta.url + '">免費加入 Hub</a></div>';
+    out.innerHTML = h;
+  } catch (e) { out.innerHTML = '<div class="err">網絡錯誤，請再試一次</div>'; }
+  finally { btn.disabled = false; btn.textContent = '即時體檢'; }
+});
+</script>
