@@ -120,11 +120,11 @@ function recmoment_hub_portal_shortcode() {
       /* ── footer ── */
       .rmp-foot{border-top:1px solid #222;padding:14px 24px;font-size:10px;letter-spacing:.1em;color:#444;text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
       /* ── theme footer: match dark terminal ── */
-      footer.wp-block-template-part .is-style-section-1{background:#060606!important}
-      footer.wp-block-template-part h3{color:#8b949e!important;font-size:13px!important;letter-spacing:.12em!important;text-transform:uppercase!important}
-      footer.wp-block-template-part p{color:#555!important;font-size:13px!important}
-      footer.wp-block-template-part a{color:#3ddc97!important;text-decoration:none!important}
-      footer.wp-block-template-part a:hover{color:#7dffc8!important}
+      body.page-id-128 footer.wp-block-template-part .is-style-section-1{background:#060606!important}
+      body.page-id-128 footer.wp-block-template-part h3{color:#8b949e!important;font-size:13px!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+      body.page-id-128 footer.wp-block-template-part p{color:#555!important;font-size:13px!important}
+      body.page-id-128 footer.wp-block-template-part a{color:#3ddc97!important;text-decoration:none!important}
+      body.page-id-128 footer.wp-block-template-part a:hover{color:#7dffc8!important}
       @media (max-width:900px){
         .rmp-grid{grid-template-columns:1fr}
         .rmp-vb{display:none}
