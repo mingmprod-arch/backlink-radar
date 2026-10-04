@@ -49,8 +49,26 @@ document.getElementById('rmGo').addEventListener('click', async () => {
       h += '<div class="row"><span class="' + (c.ok ? 'ok' : 'bad') + '">' + (c.ok ? '✓' : '✗') + '</span>' +
            '<div><b>' + c.name + '</b>' + (c.ok ? '' : '<div class="tip">' + c.tip + '</div>') + '</div></div>';
     if (d.geoNote) h += '<div class="geo">⚠️ ' + d.geoNote + '</div>';
-    h += '<div class="cta">' + d.cta.text + '<br><a href="' + d.cta.url + '">免費加入 Hub</a></div>';
+    h += '<div class="cta">' + d.cta.text +
+      '<div style="margin:14px 0 4px;font-size:14px;opacity:.85">想電郵收返份完整報告 + 30 日後免費覆測？</div>' +
+      '<input type="email" id="rmEmail" placeholder="你嘅 email" style="width:100%;max-width:320px;padding:11px;border-radius:8px;border:0;margin-top:6px;box-sizing:border-box" />' +
+      '<br><a href="#" id="rmSend" style="background:#059669">電郵完整報告俾我</a>' +
+      '<div id="rmEmailMsg" style="margin-top:8px;font-size:13px"></div>' +
+      '<div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.2);padding-top:14px"><a href="' + d.cta.url + '">免費加入 Hub</a></div></div>';
     out.innerHTML = h;
+    document.getElementById('rmSend').addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const em = document.getElementById('rmEmail').value.trim();
+      const msg = document.getElementById('rmEmailMsg');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { msg.textContent = '請輸入正確 email'; return; }
+      msg.textContent = '傳送中…';
+      const sr = await fetch('https://seo-hub-imbe.onrender.com/hub/public/audit/subscribe', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email: em, url: d.url })
+      });
+      const sd = await sr.json();
+      msg.textContent = sr.ok ? (sd.reportEmailed ? '✓ 報告已寄出，睇下 inbox（唔記得睇垃圾郵件）' : '✓ 已記低，報告稍後寄出') : (sd.error || '失敗，再試一次');
+    });
   } catch (e) { out.innerHTML = '<div class="err">網絡錯誤，請再試一次</div>'; }
   finally { btn.disabled = false; btn.textContent = '即時體檢'; }
 });
