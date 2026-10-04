@@ -53,6 +53,7 @@ function recmoment_hub_portal_shortcode() {
       .rmp-hout{margin-top:10px;font-size:12px;color:#666;word-break:break-all}
       /* ── grid ── */
       .rmp-grid{display:grid;grid-template-columns:220px 1px 1fr}
+      .rmp-grid>p{display:none}
       .rmp-vb{background:#1c1c1c}
       .rmp-side{padding:24px 20px;align-self:start;position:sticky;top:16px}
       .rmp-sblk{margin-bottom:28px}
@@ -157,8 +158,7 @@ function recmoment_hub_portal_shortcode() {
         </div>
       </aside>
       <div class="rmp-vb"></div>
-      <main class="rmp-main">
-
+      <div class="rmp-main">
     <div class="rmp-sec" id="portal-join">
       <div class="rmp-sec-h"><span class="idx">// 01</span><span class="ttl" data-i18n="t1">取得 API key（免費）</span><span class="chip">POST /hub/public/signup</span></div>
       <div>
@@ -238,7 +238,7 @@ function recmoment_hub_portal_shortcode() {
       </div>
     </div>
 
-      </main>
+      </div>
     </div>
 
     <div class="rmp-foot">
