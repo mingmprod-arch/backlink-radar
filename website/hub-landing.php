@@ -111,9 +111,10 @@ function recmoment_hub_shortcode() {
 
     <div class="rmh-hero">
       <div class="rmh-hline"><span class="rmh-pr">guest@recmoment</span><span class="rmh-cm">:~$</span> <span class="rmh-cmd">hub --join</span><span class="rmh-cur"></span></div>
-      <h1>Backlink 配對網絡，<br>由<span class="acc">系統自動對接</span>。</h1>
-      <p class="rmh-copy">提交你嘅目標網址，系統自動喺已審核嘅網站目錄入面搵主題相關嘅出版方、草擬插入建議、對方一撳批准、落地後爬蟲驗證、自動結算同出月報。你嘅 AI agent 仲可以經 MCP 或 REST API 直接用。</p>
-      <p class="rmh-cta"><a class="btn" href="https://recmoment.net/hub-portal/">$ join --free</a><a class="btn ghost" href="#hub-join" style="margin-left:10px">$ view --pricing</a></p>
+      <h1>唔使再逐個站求人。<br>講句「我要 backlink」，<span class="acc">系統自動對接</span>。</h1>
+      <p class="rmh-copy"><b style="color:#c8c8c8">三步，60 秒：</b>① 免費攞你嘅 key → ② 貼落你嘅 AI（Claude / Cursor / Kimi）→ ③ 佢自動幫你喺 130+ 個已審核網站入面搵位、出提案、跟到刊登為止。出版方永遠有最終決定權，付費 placement 自動帶 sponsored 標記。</p>
+      <details class="rmh-copy" style="cursor:pointer"><summary style="color:#555">技術細節（工程師先睇）▼</summary><span style="color:#666">MCP server + REST API。關鍵字/主題詞庫/wishlist 三重配對，成交經爬蟲驗證（link + rel 屬性），DR 加權積分結算，月度 niche benchmark。全部數據來自真實成交，唔係 marketing 數。</span></details>
+      <p class="rmh-cta"><a class="btn" href="https://recmoment.net/hub-portal/">$ join --free（免費開始）</a><a class="btn ghost" href="#hub-join" style="margin-left:10px">$ view --pricing</a></p>
     </div>
 
     <div class="rmh-sec" id="hub-live">
