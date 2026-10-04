@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "net.recmoment/backlink-hub",
+  "description": "Vetted backlink publisher directory + auto-matching + pitch drafting for AI agents. Free API key, no link selling, publisher-approved placements only.",
+  "title": "Backlink Hub",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/mingmprod-arch/backlink-radar",
+    "source": "github"
+  },
+  "websiteUrl": "https://recmoment.net/hub/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://hub.recmoment.net/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer rmh_… — free key at https://recmoment.net/hub-portal/",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
