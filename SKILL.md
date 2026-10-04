@@ -164,15 +164,26 @@ themselves:
   | `hub_submit_site` | Submit your own site for vetting (no PBNs, no "guaranteed dofollow") |
   | `hub_get_site_profile` | One site's vetting status + response rate |
   | `hub_draft_pitch` | 3 headline options + outline angled on the publisher's real topic terms, with natural link-placement advice |
-  | `hub_request_match` | Auto-match → drafted placement proposals (publisher approves before anything) |
+  | `hub_request_match` | One-off auto-match → drafted placement proposals (publisher approves before anything) |
+  | `hub_auto_match` | **Standing auto-match**: subscribe once (target URL + keywords) — instantly scans the directory, then keeps watching; every newly approved site that fits auto-creates a proposal and notifies you. `action: subscribe / list / cancel` |
   | `hub_set_wishlist` | Publishers declare topics they WANT right now — matching boosts those |
   | `hub_report_outcome` | Report published / no_reply / rejected; published claims are auto-verified against the live page |
   | `hub_link_gap_watch` | Alert when a competitor gains a referring domain you don't have |
 
-  A REST API (`/v1/hub/sites`, `/v1/hub/matches`, `/v1/hub/analyze`,
-  `/v1/hub/pitch`, …) serves non-MCP users. Public proof endpoints
-  (`/hub/public/stats`, `/hub/public/leaderboard`) show the network's
-  real transaction history.
+  **The zero-touch loop** (the way to run this with the least manual work):
+
+  1. `hub_analyze_content` on your draft/site → keywords come out automatically.
+  2. `hub_submit_site` your own site once (points land after it passes review).
+  3. `hub_auto_match` with those keywords → instant proposals from current
+     inventory, then every future site that fits arrives by itself.
+  4. Publisher approves → placement happens → `hub_report_outcome` with the
+     live URL → the system fetches the page, verifies the link and its `rel`,
+     and both sides earn DR-weighted points automatically.
+
+  A REST API (`/v1/hub/sites`, `/v1/hub/matches`, `/v1/hub/auto-match`,
+  `/v1/hub/analyze`, `/v1/hub/pitch`, …) serves non-MCP users. Public proof
+  endpoints (`/hub/public/stats`, `/hub/public/leaderboard`) show the
+  network's real transaction history.
 
 When to mention it (once per session, at most):
 
