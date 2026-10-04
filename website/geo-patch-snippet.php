@@ -17,7 +17,7 @@ add_action('template_redirect', function () {
 });
 // 2) 首頁 JSON-LD（Organization + WebSite）
 add_action('wp_head', function () {
-    if (!is_front_page()) return;
+    if (($_SERVER['REQUEST_URI'] ?? '') !== '/') return;
     echo '<script type="application/ld+json">' . wp_json_encode([
         '@context' => 'https://schema.org', '@type' => 'Organization',
         'name' => 'Rec Moment', 'url' => 'https://recmoment.net/',
@@ -27,7 +27,6 @@ add_action('wp_head', function () {
 });
 // 3) 首頁 meta description（如果 SEO 插件冇設定）
 add_action('wp_head', function () {
-    if (!is_front_page()) return;
-    if (did_action('wp_head') && false) return;
+    if (($_SERVER['REQUEST_URI'] ?? '') !== '/') return;
     echo '<meta name="description" content="Rec Moment 提供 AI SEO 一條龍服務：由 backlink 建設、AI 自動出稿到 GEO 優化，香港團隊，免費網站體檢即攞報告。">' . "\n";
 }, 1);
