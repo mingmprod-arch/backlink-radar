@@ -167,7 +167,7 @@ function recmoment_hub_shortcode() {
           <a class="btn ghost" href="https://buy.stripe.com/5kQ5kw6BzawX77ocgc1Jm03">訂閱 Agency</a>
         </div>
       </div>
-      <p class="fineprint">免費玩家都可以 join：每月 20 次目錄查詢，交站賺積分（+0.5/DR）、成交驗證 +15，積分解鎖配對。去 <a href="https://recmoment.net/hub-portal/">會員中心</a> 攞免費 API key。</p>
+      <p class="fineprint">免費玩家都可以 join：每月 20 次目錄查詢，交站審批通過後賺積分（+0.5/DR，DR≥10）、成交驗證 +10~30（按站 DR），積分解鎖配對。去 <a href="https://recmoment.net/hub-portal/">會員中心</a> 攞免費 API key。</p>
     </div>
 
     <div class="rmh-sec">
