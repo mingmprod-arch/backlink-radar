@@ -244,6 +244,15 @@ function recmoment_hub_portal_shortcode() {
       </div>
     </div>
 
+    <div class="rmp-sec hidden" id="portal-pipe">
+      <div class="rmp-sec-h"><span class="idx">// 08</span><span class="ttl">Leads Pipeline</span><span class="chip">admin</span></div>
+      <div>
+        <p class="hint">免費體檢 → email 捕捉 → 第 3/7/14 日跟進 → 第 30 日覆測。一眼睇晒成條 pipeline。</p>
+        <div id="rmPipeStats" class="hint mono" style="margin:8px 0 12px"></div>
+        <div id="rmPipeTable"></div>
+      </div>
+    </div>
+
       </div>
     </div>
 
@@ -476,8 +485,53 @@ function recmoment_hub_portal_shortcode() {
           msg('rmWishMsg',d.wishlist?(T('wishok')+d.wishlist.topics.join(', ')):(d.error||'error'),!!d.wishlist);
         }).catch(function(){msg('rmWishMsg',T('neterr'),false)});
       };
+      // ── Leads Pipeline（admin 專用：403 就靜默保持 hidden）──
+      var STAGE_LABEL={0:'D0 報告',1:'D3 已寄',2:'D7 已寄',3:'D14 完成'};
+      window.rmLoadPipeline=function(){
+        fetch(API+'/v1/hub/leads',{headers:authed()}).then(function(r){if(!r.ok)throw 0;return r.json()})
+        .then(function(d){
+          document.getElementById('portal-pipe').classList.remove('hidden');
+          var leads=d.leads||[];
+          var stages={0:0,1:0,2:0,3:0},rescored=0,up=0,down=0,flat=0;
+          leads.forEach(function(l){
+            var s=(l.stage==null?0:l.stage);if(l.rescoreAt)s=4;
+            if(s===4)rescored++;else stages[s]=(stages[s]||0)+1;
+            if(l.rescoreAt&&l.score!=null){var dl=l.rescore-l.score;if(dl>0)up++;else if(dl<0)down++;else flat++;}
+          });
+          var stats=document.getElementById('rmPipeStats');stats.textContent='';
+          [['Total',leads.length],['D0',stages[0]],['D3',stages[1]],['D7',stages[2]],['完成',stages[3]],['覆測',rescored],['📈',up],['📉',down],['➖',flat]]
+          .forEach(function(p){
+            var c=rmEl('div','rmp-stat');
+            c.style.cssText='display:inline-block;margin:0 14px 8px 0;text-align:center';
+            var n=rmEl('div',null,String(p[1]));n.style.cssText='font-size:22px;font-weight:700;color:#7ee787';
+            var t=rmEl('div',null,p[0]);t.style.cssText='font-size:11px;color:#8b949e';
+            c.appendChild(n);c.appendChild(t);stats.appendChild(c);
+          });
+          var box=document.getElementById('rmPipeTable');box.textContent='';
+          if(!leads.length){box.appendChild(rmEl('div','hint','No leads yet — /audit/ 頁留 email 先會入嚟'));return}
+          var tb=rmEl('table','runs'),tr=rmEl('tr');
+          ['email','site','score','stage','gaps','captured'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
+          tb.appendChild(tr);
+          leads.forEach(function(l){
+            var row=rmEl('tr');
+            var tdE=rmEl('td','mono',l.email);tdE.style.cssText='max-width:180px;overflow:hidden;text-overflow:ellipsis';row.appendChild(tdE);
+            var tdU=rmEl('td');
+            if(l.url){var a=rmEl('a',null,l.url.replace(/^https?:\/\//,'').slice(0,30));a.href=l.url;a.target='_blank';tdU.appendChild(a)}
+            else tdU.textContent='—';row.appendChild(tdU);
+            var tdS=rmEl('td','mono');
+            tdS.textContent=(l.score!=null?l.score:'?')+(l.rescoreAt?(' → '+l.rescore+(l.rescore-l.score>0?'📈':(l.rescore-l.score<0?'📉':''))):'');
+            row.appendChild(tdS);
+            var st=l.rescoreAt?'覆測完':(STAGE_LABEL[l.stage==null?0:l.stage]||'?');
+            row.appendChild(rmEl('td',null,st));
+            row.appendChild(rmEl('td',null,(l.gaps||[]).slice(0,3).join(', ')||'—'));
+            var tdD=rmEl('td','mono',(l.ts||'').slice(0,10));tdD.style.color='#555';row.appendChild(tdD);
+            tb.appendChild(row);
+          });
+          box.appendChild(tb);
+        }).catch(function(){/* 403 = 非 admin，保持 hidden */});
+      };
       rmSetLang(lang());
-      if(key())rmLoadDash();
+      if(key()){rmLoadDash();rmLoadPipeline();}
     })();
     </script>
     <?php return ob_get_clean();
