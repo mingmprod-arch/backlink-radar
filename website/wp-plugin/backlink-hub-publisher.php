@@ -10,6 +10,7 @@ class BHP_Plugin {
         add_action('admin_menu', [__CLASS__, 'menu']);
         add_action('admin_init', [__CLASS__, 'register']);
         add_action('bhp_poll', [__CLASS__, 'poll']);
+        add_action('transition_post_status', [__CLASS__, 'onPublish'], 10, 3);
         add_filter('cron_schedules', function ($s) {
             $s['bhp_15min'] = ['interval' => 900, 'display' => 'Every 15 min (Backlink Hub)'];
             return $s;
@@ -136,10 +137,24 @@ class BHP_Plugin {
         $msg = "提案 {$it['matchId']} 已起稿（SEO {$score['total']} 分，{$status}）。" . ($score['total'] < intval(self::opt('min_score',70)) ? ' 未達門檻：' . implode('；', $score['gaps']) : '');
         self::flash($status === 'publish' ? 'success' : 'warning', $msg);
 
-        if ($status === 'publish') {
-            self::api('POST', '/outcomes', ['matchId' => $it['matchId'], 'siteId' => $it['siteId'], 'outcome' => 'published', 'liveUrl' => get_permalink($postId), 'paid' => $it['paid']]);
-            self::api('POST', '/publisher/inbox/ack', ['matchId' => $it['matchId'], 'siteId' => $it['siteId']]);
-        }
+        // 起稿即 ack（唔好下次輪詢再重複起）；outcome 等真正 publish 先回報
+        self::api('POST', '/publisher/inbox/ack', ['matchId' => $it['matchId'], 'siteId' => $it['siteId']]);
+        if ($status === 'publish') self::reportOutcome($postId, $it);
+    }
+
+    private static function reportOutcome($postId, $it) {
+        if (get_post_meta($postId, '_bhp_reported', true)) return;
+        self::api('POST', '/outcomes', ['matchId' => $it['matchId'], 'siteId' => $it['siteId'], 'outcome' => 'published', 'liveUrl' => get_permalink($postId), 'paid' => $it['paid']]);
+        update_post_meta($postId, '_bhp_reported', 1);
+    }
+
+    // 草稿之後人手撳出版：呢度接住回報 Hub（自動驗證 + 計分）
+    public static function onPublish($new, $old, $post) {
+        if ($new !== 'publish' || $old === 'publish') return;
+        $matchId = get_post_meta($post->ID, '_bhp_match', true);
+        if (!$matchId || get_post_meta($post->ID, '_bhp_reported', true)) return;
+        self::api('POST', '/outcomes', ['matchId' => $matchId, 'outcome' => 'published', 'liveUrl' => get_permalink($post->ID)]);
+        update_post_meta($post->ID, '_bhp_reported', 1);
     }
 
     private static function writeArticle($it, $link) {
