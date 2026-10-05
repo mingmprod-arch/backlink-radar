@@ -499,13 +499,16 @@ function recmoment_hub_portal_shortcode() {
           document.getElementById('portal-pipe').classList.remove('hidden');
           var leads=d.leads||[];
           var stages={0:0,1:0,2:0,3:0},rescored=0,up=0,down=0,flat=0;
+          var ab={A:{sent:0,open:0},B:{sent:0,open:0}};
           leads.forEach(function(l){
             var s=(l.stage==null?0:l.stage);if(l.rescoreAt)s=4;
             if(s===4)rescored++;else stages[s]=(stages[s]||0)+1;
             if(l.rescoreAt&&l.score!=null){var dl=l.rescore-l.score;if(dl>0)up++;else if(dl<0)down++;else flat++;}
+            if(l.pitchAt&&ab[l.pitchVariant]){ab[l.pitchVariant].sent++;if(l.pitchOpenedAt)ab[l.pitchVariant].open++;}
           });
           var stats=document.getElementById('rmPipeStats');stats.textContent='';
-          [['Total',leads.length],['D0',stages[0]],['D3',stages[1]],['D7',stages[2]],['完成',stages[3]],['覆測',rescored],['📈',up],['📉',down],['➖',flat]]
+          [['Total',leads.length],['D0',stages[0]],['D3',stages[1]],['D7',stages[2]],['完成',stages[3]],['覆測',rescored],['📈',up],['📉',down],['➖',flat],
+           ['A版開信',ab.A.open+'/'+ab.A.sent],['B版開信',ab.B.open+'/'+ab.B.sent]]
           .forEach(function(p){
             var c=rmEl('div','rmp-stat');
             c.style.cssText='display:inline-block;margin:0 14px 8px 0;text-align:center';
@@ -532,7 +535,7 @@ function recmoment_hub_portal_shortcode() {
             row.appendChild(rmEl('td',null,(l.gaps||[]).slice(0,3).join(', ')||'—'));
             var tdD=rmEl('td','mono',(l.ts||'').slice(0,10));tdD.style.color='#555';row.appendChild(tdD);
             var tdP=rmEl('td');
-            var btn=rmEl('button','rmp-btn ghost',l.pitchAt?('✉ 已寄'+(l.pitchCount>1?'×'+l.pitchCount:'')):'✉ pitch');
+            var btn=rmEl('button','rmp-btn ghost',l.pitchOpenedAt?'📖 已開':(l.pitchAt?('✉ 已寄'+(l.pitchCount>1?'×'+l.pitchCount:'')):'✉ pitch'));
             btn.style.cssText='padding:2px 8px;font-size:11px';
             btn.onclick=(function(em){return function(){rmPitchDraft(em)}})(l.email);
             tdP.appendChild(btn);row.appendChild(tdP);
@@ -551,7 +554,7 @@ function recmoment_hub_portal_shortcode() {
         fetch(API+'/v1/hub/leads/pitch',{method:'POST',headers:authed(),body:JSON.stringify({email:email})})
         .then(function(r){return r.json()}).then(function(d){
           if(!d.draft){document.getElementById('rmPipePitchTxt').textContent=d.error||'error';return}
-          document.getElementById('rmPipePitchTxt').textContent='To: '+d.draft.to+'\nSubject: '+d.draft.subject+'\n\n'+d.draft.text;
+          document.getElementById('rmPipePitchTxt').textContent='['+(d.draft.variant||'?')+'版] To: '+d.draft.to+'\nSubject: '+d.draft.subject+'\n\n'+d.draft.text;
         }).catch(function(){document.getElementById('rmPipePitchTxt').textContent='network error'});
       };
       document.getElementById('rmPipePitchSend').onclick=function(){
