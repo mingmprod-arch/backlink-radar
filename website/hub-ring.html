@@ -75,7 +75,7 @@
     .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
     .then(function (res) {
       if (!res.ok || !res.j.valid) { fail("This invite link is invalid or has been fully used."); return; }
-      title.innerHTML = 'You\'re invited to <span class="ringname"></span>';
+      title.innerHTML = "You're invited to <span class='ringname'></span>";
       title.querySelector(".ringname").textContent = res.j.ringName;
       sub.textContent = "A private backlink exchange ring on Backlink Hub. Join free — your API key arrives by email in under a minute.";
       perks.style.display = ""; form.style.display = "";
