@@ -1,5 +1,6 @@
 
 // ── Backlink Hub 頁（/hub/）：terminal console 風（同 /hub-portal/ 一套設計語言）──
+// 此檔係 WP Code Snippets snippet 5 嘅版本控制副本。改法：改呢度 → push → 經 wp-admin fetch api.github.com 更新 snippet。
 function recmoment_hub_shortcode() {
     ob_start(); ?>
     <div class="rmh">
@@ -123,6 +124,12 @@ function recmoment_hub_shortcode() {
       <div class="stats" id="rmHubStats"></div>
     </div>
 
+    <div class="rmh-sec" id="hub-bench">
+      <div class="rmh-sec-h"><span class="idx">// 00b</span><span class="ttl">Niche benchmarks</span><span class="chip">GET /hub/public/benchmarks</span></div>
+      <p class="rmh-copy">真實成交數據，按 niche 拆——邊個領域嘅出版方最肯回覆、成交最快。呢份表本身就係我哋嘅護城河：對手冇成交數據，永遠落後。</p>
+      <div id="rmHubBench" style="overflow-x:auto"></div>
+    </div>
+
     <div class="rmh-sec">
       <div class="rmh-sec-h"><span class="idx">// 01</span><span class="ttl">How it works</span><span class="chip">5 steps, automated</span></div>
       <div class="step"><span class="n">[01]</span><span><span class="t">提交目標</span><div class="d">話俾系統知你想邊個頁面被 link，加主題關鍵字</div></span></div>
@@ -204,6 +211,15 @@ function recmoment_hub_shortcode() {
           card.appendChild(num);card.appendChild(lbl);box.appendChild(card);
         });
       }).catch(function(){if(sec)sec.style.display='none';});
+
+      fetch('https://hub.recmoment.net/hub/public/benchmarks').then(function(r){return r.json()}).then(function(d){
+        var bb=document.getElementById('rmHubBench');if(!bb||!d.niches||!d.niches.length)return;
+        var rows=d.niches.filter(function(n){return n.proposals>0||n.sites>1}).slice(0,8);
+        if(!rows.length)rows=d.niches.slice(0,8);
+        var h='<table style="width:100%;border-collapse:collapse;font-size:12px"><tr><th style="text-align:left;color:#555;padding:6px 8px;border-bottom:1px solid #222">NICHE</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">已審核站</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">提案</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">回覆率</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">成交</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">成交日數(中位)</th></tr>';
+        rows.forEach(function(n){h+='<tr><td style="color:#e8e8e8;padding:6px 8px;border-bottom:1px solid #161616">'+n.niche+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.sites+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.proposals+'</td><td style="text-align:center;color:#00d9a3;padding:6px 8px;border-bottom:1px solid #161616">'+(n.responseRate!=null?Math.round(n.responseRate*100)+'%':'—')+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.published+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+(n.medianDaysToPublish!=null?Math.round(n.medianDaysToPublish)+'d':'—')+'</td></tr>'});
+        bb.innerHTML=h+'</table>';
+      }).catch(function(){var s=document.getElementById('hub-bench');if(s)s.style.display='none'});
     })();
     </script>
     <?php return ob_get_clean();
