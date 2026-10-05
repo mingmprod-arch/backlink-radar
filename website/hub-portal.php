@@ -250,6 +250,12 @@ function recmoment_hub_portal_shortcode() {
         <p class="hint">免費體檢 → email 捕捉 → 第 3/7/14 日跟進 → 第 30 日覆測。一眼睇晒成條 pipeline。</p>
         <div id="rmPipeStats" class="hint mono" style="margin:8px 0 12px"></div>
         <div id="rmPipeTable"></div>
+        <div id="rmPipePitch" class="hidden" style="margin-top:12px">
+          <pre id="rmPipePitchTxt" class="mono" style="white-space:pre-wrap;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:10px;font-size:12px;max-height:260px;overflow:auto"></pre>
+          <button class="rmp-btn" id="rmPipePitchSend">寄出 Send</button>
+          <button class="rmp-btn ghost" id="rmPipePitchClose">收起</button>
+          <span class="hint" id="rmPipePitchMsg"></span>
+        </div>
       </div>
     </div>
 
@@ -510,7 +516,7 @@ function recmoment_hub_portal_shortcode() {
           var box=document.getElementById('rmPipeTable');box.textContent='';
           if(!leads.length){box.appendChild(rmEl('div','hint','No leads yet — /audit/ 頁留 email 先會入嚟'));return}
           var tb=rmEl('table','runs'),tr=rmEl('tr');
-          ['email','site','score','stage','gaps','captured'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
+          ['email','site','score','stage','gaps','captured','pitch'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
           tb.appendChild(tr);
           leads.forEach(function(l){
             var row=rmEl('tr');
@@ -525,10 +531,40 @@ function recmoment_hub_portal_shortcode() {
             row.appendChild(rmEl('td',null,st));
             row.appendChild(rmEl('td',null,(l.gaps||[]).slice(0,3).join(', ')||'—'));
             var tdD=rmEl('td','mono',(l.ts||'').slice(0,10));tdD.style.color='#555';row.appendChild(tdD);
+            var tdP=rmEl('td');
+            var btn=rmEl('button','rmp-btn ghost',l.pitchAt?('✉ 已寄'+(l.pitchCount>1?'×'+l.pitchCount:'')):'✉ pitch');
+            btn.style.cssText='padding:2px 8px;font-size:11px';
+            btn.onclick=(function(em){return function(){rmPitchDraft(em)}})(l.email);
+            tdP.appendChild(btn);row.appendChild(tdP);
             tb.appendChild(row);
           });
           box.appendChild(tb);
         }).catch(function(){/* 403 = 非 admin，保持 hidden */});
+      };
+      // ── 一撳 pitch：預覽草稿 → 確認寄出 ──
+      var rmPitchEmail=null;
+      window.rmPitchDraft=function(email){
+        rmPitchEmail=email;
+        var box=document.getElementById('rmPipePitch');box.classList.remove('hidden');
+        document.getElementById('rmPipePitchTxt').textContent='生成中…';
+        document.getElementById('rmPipePitchMsg').textContent='';
+        fetch(API+'/v1/hub/leads/pitch',{method:'POST',headers:authed(),body:JSON.stringify({email:email})})
+        .then(function(r){return r.json()}).then(function(d){
+          if(!d.draft){document.getElementById('rmPipePitchTxt').textContent=d.error||'error';return}
+          document.getElementById('rmPipePitchTxt').textContent='To: '+d.draft.to+'\nSubject: '+d.draft.subject+'\n\n'+d.draft.text;
+        }).catch(function(){document.getElementById('rmPipePitchTxt').textContent='network error'});
+      };
+      document.getElementById('rmPipePitchSend').onclick=function(){
+        if(!rmPitchEmail)return;
+        var m=document.getElementById('rmPipePitchMsg');m.textContent='寄出中…';
+        fetch(API+'/v1/hub/leads/pitch',{method:'POST',headers:authed(),body:JSON.stringify({email:rmPitchEmail,send:true})})
+        .then(function(r){return r.json()}).then(function(d){
+          m.textContent=d.sent?'✓ 已寄出 ('+d.subject+')':(d.error||'failed');
+          if(d.sent)rmLoadPipeline();
+        }).catch(function(){m.textContent='network error'});
+      };
+      document.getElementById('rmPipePitchClose').onclick=function(){
+        document.getElementById('rmPipePitch').classList.add('hidden');rmPitchEmail=null;
       };
       rmSetLang(lang());
       if(key()){rmLoadDash();rmLoadPipeline();}
