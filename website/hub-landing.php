@@ -216,9 +216,23 @@ function recmoment_hub_shortcode() {
         var bb=document.getElementById('rmHubBench');if(!bb||!d.niches||!d.niches.length)return;
         var rows=d.niches.filter(function(n){return n.proposals>0||n.sites>1}).slice(0,8);
         if(!rows.length)rows=d.niches.slice(0,8);
-        var h='<table style="width:100%;border-collapse:collapse;font-size:12px"><tr><th style="text-align:left;color:#555;padding:6px 8px;border-bottom:1px solid #222">NICHE</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">已審核站</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">提案</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">回覆率</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">成交</th><th style="color:#555;padding:6px 8px;border-bottom:1px solid #222">成交日數(中位)</th></tr>';
-        rows.forEach(function(n){h+='<tr><td style="color:#e8e8e8;padding:6px 8px;border-bottom:1px solid #161616">'+n.niche+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.sites+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.proposals+'</td><td style="text-align:center;color:#00d9a3;padding:6px 8px;border-bottom:1px solid #161616">'+(n.responseRate!=null?Math.round(n.responseRate*100)+'%':'—')+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+n.published+'</td><td style="text-align:center;color:#c8c8c8;padding:6px 8px;border-bottom:1px solid #161616">'+(n.medianDaysToPublish!=null?Math.round(n.medianDaysToPublish)+'d':'—')+'</td></tr>'});
-        bb.innerHTML=h+'</table>';
+        // DOM 構建（唔用 innerHTML）：niche 係會員提交嘅資料，防 stored XSS
+        var tbl=document.createElement('table');tbl.style.cssText='width:100%;border-collapse:collapse;font-size:12px';
+        var ths=['NICHE','已審核站','提案','回覆率','成交','成交日數(中位)'];
+        var hr=document.createElement('tr');
+        ths.forEach(function(t,i){var th=document.createElement('th');th.textContent=t;th.style.cssText=(i?'':'text-align:left;')+'color:#555;padding:6px 8px;border-bottom:1px solid #222';hr.appendChild(th)});
+        tbl.appendChild(hr);
+        rows.forEach(function(n){
+          var tr=document.createElement('tr');
+          var cells=[String(n.niche),String(n.sites),String(n.proposals),n.responseRate!=null?Math.round(n.responseRate*100)+'%':'—',String(n.published),n.medianDaysToPublish!=null?Math.round(n.medianDaysToPublish)+'d':'—'];
+          cells.forEach(function(c,i){
+            var td=document.createElement('td');td.textContent=c;
+            td.style.cssText=(i?'text-align:center;':'')+'color:'+(i===0?'#e8e8e8':(i===3?'#00d9a3':'#c8c8c8'))+';padding:6px 8px;border-bottom:1px solid #161616';
+            tr.appendChild(td);
+          });
+          tbl.appendChild(tr);
+        });
+        bb.textContent='';bb.appendChild(tbl);
       }).catch(function(){var s=document.getElementById('hub-bench');if(s)s.style.display='none'});
     })();
     </script>
