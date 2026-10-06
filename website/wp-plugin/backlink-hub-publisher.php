@@ -123,7 +123,7 @@ class BHP_Plugin {
 
     // 已刊登嘅 Hub 連結 + 一撳撤 link
     private static function placedTable() {
-        $posts = get_posts(['post_type' => 'post', 'posts_per_page' => 50, 'post_status' => ['publish', 'draft'],
+        $posts = get_posts(['post_type' => ['post', 'page'], 'posts_per_page' => 50, 'post_status' => ['publish', 'draft'],
             'meta_query' => ['relation' => 'OR',
                 ['key' => '_bhp_match', 'compare' => 'EXISTS'],
                 ['key' => '_bhp_insert', 'compare' => 'EXISTS']]]);
@@ -229,7 +229,7 @@ class BHP_Plugin {
         $targetHost = parse_url($it['targetUrl'], PHP_URL_HOST);
         // 搵主題相關嘅舊文：關鍵字 search，要 21 日前出版，未插過呢個 domain
         $q = new WP_Query([
-            's' => $kw, 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 15,
+            's' => $kw, 'post_type' => ['post', 'page'], 'post_status' => 'publish', 'posts_per_page' => 15,
             'date_query' => [['before' => '21 days ago']],
         ]);
         $best = null; $bestScore = 0;
