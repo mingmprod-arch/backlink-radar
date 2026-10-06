@@ -1,0 +1,219 @@
+<!-- wp:html -->
+<style>
+#rmAudit{font-family:-apple-system,'PingFang HK','PingFang SC',sans-serif;max-width:760px;margin:0 auto;color:#241d4e}
+#rmAudit .hidden{display:none!important}
+#rmAudit .card{background:#fff;border:1px solid #eceaf8;border-radius:16px;padding:26px 28px;box-shadow:0 2px 14px rgba(40,30,90,.05);margin-bottom:16px}
+#rmAudit h2{margin:0 0 6px;font-size:27px}
+#rmAudit h3{margin:0 0 12px;font-size:17px}
+#rmAudit .sub{color:#6d6799;margin-bottom:18px;line-height:1.7}
+#rmAudit .muted{color:#8a84b0}
+#rmAudit .small{font-size:12.5px}
+#rmAudit input{width:100%;padding:14px 16px;font-size:16px;border:2px solid #d9d5f0;border-radius:12px;box-sizing:border-box;margin-top:8px}
+#rmAudit input:focus{border-color:#6C63FF;outline:none}
+#rmAudit button.go{width:100%;margin-top:12px;padding:15px;font-size:16px;font-weight:700;color:#fff;background:#6C63FF;border:0;border-radius:12px;cursor:pointer}
+#rmAudit button:disabled{opacity:.55;cursor:wait}
+#rmAudit .err{color:#dc2626;font-size:13px;margin-top:8px;min-height:18px}
+#rmAudit .langrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+#rmAudit .logo{font-size:12px;letter-spacing:3px;color:#6C63FF;font-weight:800}
+#rmAudit .langbtns button{background:#f1effc;border:0;border-radius:8px;padding:5px 12px;font-size:12.5px;color:#6d6799;cursor:pointer;margin-left:6px}
+#rmAudit .langbtns button.on{background:#6C63FF;color:#fff}
+#rmAudit .scoreRing{display:flex;align-items:center;gap:22px}
+#rmAudit .big{font-size:58px;font-weight:800;line-height:1}
+#rmAudit .big span{font-size:20px;color:#8a84b0;font-weight:600}
+#rmAudit .grade{display:inline-block;font-size:20px;font-weight:800;padding:5px 15px;border-radius:10px;color:#fff}
+#rmAudit .strict{color:#9b93c9;font-size:12px;margin-top:10px}
+#rmAudit .catrow{padding:9px 0}
+#rmAudit .catlab{display:flex;justify-content:space-between;font-size:13.5px;color:#4a456e}
+#rmAudit .catbar{height:9px;border-radius:99px;background:#efedfa;margin-top:5px;overflow:hidden}
+#rmAudit .catbar i{display:block;height:100%;border-radius:99px}
+#rmAudit .authrow{margin-top:14px;background:#f6f5fd;border-radius:12px;padding:14px 16px;font-size:14px;color:#4a456e}
+#rmAudit .authrow b{color:#241d4e;font-size:19px}
+#rmAudit .authex{margin-top:8px;color:#6d6799;font-size:12.5px;line-height:1.8;border-top:1px solid #e3dffb;padding-top:9px}
+#rmAudit .row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid #f1effa}
+#rmAudit .row:first-of-type{border-top:0}
+#rmAudit .ic{font-weight:800;flex:0 0 22px;text-align:center}
+#rmAudit .ok{color:#059669}
+#rmAudit .bad{color:#dc2626}
+#rmAudit .nm{font-weight:700;font-size:14.5px}
+#rmAudit .tip{color:#6d6799;font-size:13px;line-height:1.7;margin-top:3px}
+#rmAudit .fix{color:#4a456e;font-size:13.5px;line-height:1.8;margin-top:6px;background:#f8f7fd;border-radius:10px;padding:10px 12px}
+#rmAudit .gatewrap{position:relative}
+#rmAudit .blurzone{filter:blur(7px);pointer-events:none;user-select:none}
+#rmAudit .gatecard{position:absolute;top:36px;left:50%;transform:translateX(-50%);width:min(92%,420px);background:#fff;border:1px solid #e3dffb;border-radius:18px;box-shadow:0 18px 50px rgba(50,35,120,.18);padding:26px;text-align:center;z-index:5}
+#rmAudit .gatecard h3{font-size:19px;margin:0 0 8px}
+#rmAudit .gatecard p{color:#6d6799;font-size:13.5px;line-height:1.7;margin:0 0 6px}
+#rmAudit .gatecard button{width:100%;margin-top:14px;padding:14px;font-size:15.5px;font-weight:700;color:#fff;background:#6C63FF;border:0;border-radius:12px;cursor:pointer}
+#rmAudit .geo{background:#fffbeb;border:1px solid #fcd34d}
+#rmAudit .geobar{height:10px;border-radius:99px;background:#fef3c7;overflow:hidden;margin:10px 0}
+#rmAudit .geobar i{display:block;height:100%;background:#f59e0b}
+#rmAudit .cta{background:#241d4e;color:#fff;text-align:center}
+#rmAudit .cta .t{font-size:16.5px;font-weight:700;line-height:1.7;margin-bottom:14px}
+#rmAudit .cta a{display:inline-block;background:#6C63FF;color:#fff;text-decoration:none;font-weight:700;padding:13px 30px;border-radius:12px}
+#rmAudit .pill{display:inline-block;margin:3px 4px 0 0;padding:4px 11px;border-radius:999px;font-size:12.5px}
+#rmAudit .pill.okp{background:#ecfdf5;color:#15803d}
+#rmAudit .pill.badp{background:#fef2f2;color:#b91c1c}
+#rmAudit .pill.waitp{background:#f3f4f6;color:#6b7280}
+#rmAudit .sent{background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;border-radius:12px;padding:14px 16px;font-size:14px;margin-top:10px;text-align:center}
+</style>
+<div id="rmAudit">
+  <div class="card">
+    <div class="langrow"><span class="logo">RECMOMENT · JEV</span><span class="langbtns"><button id="rmALZh" type="button">中文</button><button id="rmALEn" type="button">EN</button></span></div>
+    <h2 id="rmATitle"></h2>
+    <div class="sub" id="rmASub"></div>
+    <input type="url" id="rmAUrl" inputmode="url">
+    <button class="go" id="rmAGo" type="button"></button>
+    <div class="err" id="rmAErr"></div>
+  </div>
+  <div id="rmAResult" class="hidden">
+    <div class="card">
+      <div class="scoreRing">
+        <div class="big"><span id="rmAScoreNum"></span><span id="rmAScoreMax"></span></div>
+        <div><span class="grade" id="rmAGrade"></span><div class="muted small" id="rmAHost" style="margin-top:6px"></div></div>
+      </div>
+      <div class="strict" id="rmAStrict"></div>
+      <div id="rmAAuth" class="authrow"></div>
+    </div>
+    <div class="card">
+      <h3 id="rmACatsTitle"></h3>
+      <div id="rmACats"></div>
+    </div>
+    <div class="card">
+      <h3 id="rmATopTitle"></h3>
+      <div id="rmATopList"></div>
+    </div>
+    <div class="gatewrap">
+      <div class="blurzone" id="rmABlur">
+        <div class="card"><h3 id="rmAGapsTitle"></h3><div id="rmAGapList"></div></div>
+        <div class="card geo"><h3 id="rmAGeoTitle"></h3><div class="geobar"><i id="rmAGeoBar"></i></div><div id="rmAGeoBody" class="tip"></div></div>
+        <div class="card"><h3 id="rmAAllTitle"></h3><div id="rmAAllList"></div></div>
+      </div>
+      <div class="gatecard" id="rmAGate">
+        <h3 id="rmAGateTitle"></h3>
+        <p id="rmAGateSub"></p>
+        <input type="text" id="rmAName">
+        <input type="email" id="rmAEmail" inputmode="email">
+        <button id="rmASend" type="button"></button>
+        <div class="err" id="rmAGateErr"></div>
+        <div class="muted small" id="rmAGateNote"></div>
+      </div>
+    </div>
+    <div class="card cta"><div class="t" id="rmACtaText"></div><a href="https://recmoment.net/hub-portal/" id="rmACtaBtn"></a></div>
+  </div>
+</div>
+<script>
+(function(){
+var API='https://hub.recmoment.net';
+var L='zh';
+var lastUrl=null,lastData=null;
+var CAT_EN={tech:'Technical',content:'Content',authority:'Authority & Trust',geo:'GEO / AI search'};
+var CAT_COLOR={tech:'#0ea5e9',content:'#8b5cf6',authority:'#f59e0b',geo:'#10b981'};
+var T={
+ zh:{title:'免費 AI 網站體檢',sub:'JEV 嚴格評分引擎：25 項硬指標 × 4 大分類，雞蛋挑骨頭，唔派安慰分。',ph:'https://你嘅網站.com',go:'開始掃描',wait:'掃描緊，約 10–20 秒…',err:'唔好意思，掃唔到呢個網站——檢查網址係咪 https:// 開頭、係咪公開訪問到。',cats:'四大分類得分',top:'即時結果（頭 5 項）',gaps:'其餘修復方案',geo:'AI 搜尋友好度（GEO）',all:'完整檢查清單（25 項）',gt:'解鎖全部修復方案',gs:'你淨係睇到頭 2 個修復方案——其餘全部、GEO 分析同 25 項完整清單，留低 email 即刻解鎖，完整報告寄埋俾你。',nm:'點稱呼（可留空）',em:'你嘅 email',send:'解鎖＋寄報告',sending:'寄緊…',gn:'我哋只會寄 SEO 相關內容，一撳退訂。',sent:'✓ 已解鎖！完整報告已寄去你嘅 email（冇收到就睇垃圾郵件）。',ctat:'想權威分升？你要嘅係 backlink。Backlink Hub 免費幫你配對已審核嘅出版站。',ctab:'免費加入 Backlink Hub',auth:'現時 Backlink 同權威',authNone:'權威數據接入中，下次掃描補返',authEx:'DA/DR 係咩？第三方對你網域權威嘅評分（0–100），主要由「有幾多個高質網站 link 去你」決定。佢唔係 Google 官方分，但同排名高度相關——分低過 20，寫幾多文都難上首頁，因為 Google 同 AI 根本未信你。提升方法只有一個：攞更多高質 backlink。',refd:'引用域',geod:'AI 搜尋（ChatGPT / Perplexity）引用內容時係按結構抽取。呢 5 項係 AI 時代嘅入場券。',geodOk:'你嘅 GEO 基建齊全——AI 搜尋可以正確引用你。'},
+ en:{title:'Free AI Website Audit',sub:'JEV strict scoring engine: 25 hard metrics across 4 categories. Ruthless — no consolation points.',ph:'https://your-site.com',go:'Run audit',wait:'Scanning, about 10–20s…',err:'Sorry, could not scan that site — check the URL starts with https:// and is publicly reachable.',cats:'Score by category',top:'Instant results (first 5)',gaps:'Remaining fixes',geo:'AI-search readiness (GEO)',all:'Full checklist (25 items)',gt:'Unlock all fixes',gs:'You only see the first 2 fixes — the rest, GEO analysis and the full 25-item checklist unlock with your email. Full report lands in your inbox too.',nm:'Name (optional)',em:'Your email',send:'Unlock + email report',sending:'Sending…',gn:'SEO content only. One-click unsubscribe.',sent:'✓ Unlocked! Full report emailed (check spam if missing).',ctat:'Want a higher authority score? You need backlinks. Backlink Hub matches you with vetted publishers, free.',ctab:'Join Backlink Hub — free',auth:'Backlinks & authority now',authNone:'Authority data connecting — included in your next scan',authEx:'What is DA/DR? A third-party score (0–100) of your domain authority, driven mostly by how many quality sites link to you. Not an official Google metric, but it tracks rankings closely — below 20, no amount of content gets you to page one, because Google and AI don\'t trust you yet. The only way up: more quality backlinks.',refd:'ref. domains',geod:'AI search (ChatGPT / Perplexity) extracts answers along your page structure. These 5 items are the entry ticket.',geodOk:'Your GEO foundations are solid — AI search can cite you properly.'}
+};
+function el(id){return document.getElementById(id);}
+function txt(id,s){el(id).textContent=s;}
+function setLang(l){L=l;var t=T[l];
+ txt('rmATitle',t.title);txt('rmASub',t.sub);el('rmAUrl').placeholder=t.ph;txt('rmAGo',t.go);
+ txt('rmACatsTitle',t.cats);txt('rmATopTitle',t.top);txt('rmAGapsTitle',t.gaps);txt('rmAGeoTitle',t.geo);txt('rmAAllTitle',t.all);
+ txt('rmAGateTitle',t.gt);txt('rmAGateSub',t.gs);el('rmAName').placeholder=t.nm;el('rmAEmail').placeholder=t.em;
+ txt('rmASend',t.send);txt('rmAGateNote',t.gn);txt('rmACtaText',t.ctat);txt('rmACtaBtn',t.ctab);
+ el('rmALZh').className=l==='zh'?'on':'';el('rmALEn').className=l==='en'?'on':'';
+ if(lastData){render(lastData);}
+}
+function row(c,withFix){
+ var d=document.createElement('div');d.className='row';
+ var ic=document.createElement('div');ic.className='ic '+(c.ok?'ok':'bad');ic.textContent=c.ok?'✓':'✕';d.appendChild(ic);
+ var b=document.createElement('div');
+ var nm=document.createElement('div');nm.className='nm';nm.textContent=c.name;b.appendChild(nm);
+ if(c.tip){var tp=document.createElement('div');tp.className='tip';tp.textContent=c.tip;b.appendChild(tp);}
+ if(withFix){var f=c.fix?c.fix[L]:null;if(f){var fx=document.createElement('div');fx.className='fix';fx.textContent=f;b.appendChild(fx);}}
+ d.appendChild(b);return d;
+}
+function render(d){var t=T[L];lastData=d;
+ el('rmAResult').classList.remove('hidden');
+ txt('rmAScoreNum',d.score);txt('rmAScoreMax','/74');var g=el('rmAGrade');g.textContent=d.grade;
+ g.style.background={A:'#16a34a',B:'#65a30d',C:'#d97706',D:'#ea580c',F:'#dc2626'}[d.grade]||'#6C63FF';
+ txt('rmAHost',d.host||'');
+ txt('rmAStrict',d.strictNote||'');
+ var au=el('rmAAuth');au.innerHTML='';
+ var line=document.createElement('div');
+ var lab=document.createElement('span');lab.textContent=t.auth+'：';line.appendChild(lab);
+ if(d.authority){
+  var b=document.createElement('b');b.textContent=d.authority.score+'/100';line.appendChild(b);
+  var tail=' · '+(d.authority.refdomains!=null?d.authority.refdomains+' '+t.refd+' · ':'')+(d.authority.backlinks!=null?d.authority.backlinks+' backlinks · ':'')+d.authority.source;
+  var sp=document.createElement('span');sp.textContent=tail;line.appendChild(sp);
+ }else{
+  var sp2=document.createElement('span');sp2.className='muted';sp2.textContent=t.authNone;line.appendChild(sp2);
+ }
+ au.appendChild(line);
+ var ex=document.createElement('div');ex.className='authex';ex.textContent=t.authEx;au.appendChild(ex);
+ var cats=el('rmACats');cats.innerHTML='';
+ (d.categories||[]).forEach(function(c){
+  var cr=document.createElement('div');cr.className='catrow';
+  var cl=document.createElement('div');cl.className='catlab';
+  var n=document.createElement('span');n.textContent=L==='en'?(CAT_EN[c.id]||c.name):c.name;cl.appendChild(n);
+  var s=document.createElement('b');s.textContent=c.score;cl.appendChild(s);
+  cr.appendChild(cl);
+  var bar=document.createElement('div');bar.className='catbar';
+  var i=document.createElement('i');i.style.width=c.score+'%';i.style.background=CAT_COLOR[c.id]||'#6C63FF';
+  bar.appendChild(i);cr.appendChild(bar);cats.appendChild(cr);
+ });
+ var top=el('rmATopList');top.innerHTML='';
+ (d.checks||[]).slice(0,5).forEach(function(c){top.appendChild(row(c,false));});
+ // 淨係露頭 2 個修復方案，其餘入 blur 區
+ var gaps=(d.gaps||[]);
+ var vis=gaps.slice(0,2);
+ var topCard=el('rmATopList').parentElement;
+ var old=document.getElementById('rmAVisFix');if(old)old.remove();
+ if(vis.length){
+  var vc=document.createElement('div');vc.id='rmAVisFix';vc.style.marginTop='6px';
+  vis.forEach(function(c){var full=(d.checks||[]).filter(function(x){return x.id===c.id;})[0]||c;vc.appendChild(row(full,true));});
+  topCard.appendChild(vc);
+ }
+ var gl=el('rmAGapList');gl.innerHTML='';
+ var rest=gaps.slice(2);
+ if(!rest.length){var ok=document.createElement('div');ok.className='ok';ok.style.fontWeight='700';ok.textContent='✓ '+(L==='zh'?'冇更多缺口':'No more gaps');gl.appendChild(ok);}
+ rest.forEach(function(c){var full=(d.checks||[]).filter(function(x){return x.id===c.id;})[0]||c;gl.appendChild(row(full,true));});
+ if(d.geo){el('rmAGeoBar').style.width=d.geo.score+'%';txt('rmAGeoBody',d.geo.score>=75?t.geodOk:t.geod);}
+ var all=el('rmAAllList');all.innerHTML='';
+ (d.checks||[]).forEach(function(c){
+  var p=document.createElement('span');
+  p.className='pill '+(c.ok===null?'waitp':c.ok?'okp':'badp');
+  p.textContent=(c.ok===null?'… ':c.ok?'✓ ':'✕ ')+c.name;all.appendChild(p);
+ });
+}
+function go(){var t=T[L];var u=el('rmAUrl').value.trim();
+ el('rmAErr').textContent='';if(!u){return;}
+ if(!/^https?:\/\//i.test(u)){u='https://'+u;el('rmAUrl').value=u;}
+ var btn=el('rmAGo');btn.disabled=true;txt('rmAGo',t.wait);
+ fetch(API+'/hub/public/audit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url:u})})
+ .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+ .then(function(x){btn.disabled=false;txt('rmAGo',t.go);
+  if(!x.ok){el('rmAErr').textContent=x.d.error||t.err;return;}
+  lastUrl=x.d.url;render(x.d);
+  el('rmAResult').scrollIntoView({behavior:'smooth',block:'start'});
+ }).catch(function(){btn.disabled=false;txt('rmAGo',t.go);el('rmAErr').textContent=t.err;});
+}
+function send(){var t=T[L];
+ var em=el('rmAEmail').value.trim();var nm=el('rmAName').value.trim();
+ el('rmAGateErr').textContent='';
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){el('rmAGateErr').textContent='email?';return;}
+ var btn=el('rmASend');btn.disabled=true;txt('rmASend',t.sending);
+ fetch(API+'/hub/public/audit/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em,name:nm,url:lastUrl})})
+ .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+ .then(function(x){btn.disabled=false;txt('rmASend',t.send);
+  if(!x.ok){el('rmAGateErr').textContent=x.d.error||'error';return;}
+  el('rmAGate').style.display='none';el('rmABlur').classList.remove('blurzone');
+  var s=document.createElement('div');s.className='sent';s.textContent=t.sent;
+  el('rmAResult').insertBefore(s,el('rmAResult').children[3]||null);
+ }).catch(function(){btn.disabled=false;txt('rmASend',t.send);el('rmAGateErr').textContent='network';});
+}
+el('rmAGo').onclick=go;
+el('rmASend').onclick=send;
+el('rmALZh').onclick=function(){setLang('zh');};
+el('rmALEn').onclick=function(){setLang('en');};
+setLang('zh');
+})();
+</script>
+<!-- /wp:html -->
