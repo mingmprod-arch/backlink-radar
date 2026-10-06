@@ -15,16 +15,26 @@
   </div>
 </div>
 <script>
-fetch('/wp-json/wp/v2/posts?per_page=20&_fields=id,date,link,title,excerpt')
-  .then(function(r){return r.json()})
-  .then(function(posts){
-    var box = document.getElementById('ad-posts');
-    if (!posts.length) { box.innerHTML = '<p class="ad-muted" style="text-align:center">仲未有文章，好快有。</p>'; return; }
-    box.innerHTML = posts.map(function(p){
-      var d = new Date(p.date).toISOString().slice(0,10);
-      var ex = p.excerpt.rendered.replace(/<[^>]+>/g,'').trim().slice(0,140);
-      return '<a class="ad-post" href="' + p.link + '"><div class="meta">' + d + '</div><h3>' + p.title.rendered + '</h3><p>' + ex + '…</p></a>';
-    }).join('');
-  })
-  .catch(function(){ document.getElementById('ad-posts').innerHTML = '<p class="ad-muted" style="text-align:center">載入失敗，請刷新。</p>'; });
+(function(){
+  var box = document.getElementById('ad-posts');
+  function note(t){ box.textContent = t; box.style.textAlign = 'center'; box.style.color = '#5f5f69'; }
+  fetch('/wp-json/wp/v2/posts?per_page=20&_fields=id,date,link,title,excerpt')
+    .then(function(r){ return r.json(); })
+    .then(function(posts){
+      if (!posts.length) { note('仲未有文章，好快有。'); return; }
+      box.textContent = '';
+      posts.forEach(function(p){
+        var a = document.createElement('a');
+        a.className = 'ad-post'; a.href = p.link;
+        var meta = document.createElement('div');
+        meta.className = 'meta'; meta.textContent = new Date(p.date).toISOString().slice(0,10);
+        var h = document.createElement('h3'); h.textContent = p.title.rendered;
+        var ex = document.createElement('p');
+        ex.textContent = p.excerpt.rendered.replace(/<[^>]+>/g, '').trim().slice(0,140) + '…';
+        a.appendChild(meta); a.appendChild(h); a.appendChild(ex);
+        box.appendChild(a);
+      });
+    })
+    .catch(function(){ note('載入失敗，請刷新。'); });
+})();
 </script>
