@@ -1,0 +1,73 @@
+<div class="ad">
+  <section class="ad-hero">
+    <p class="ad-kicker">Rec Moment · Hong Kong</p>
+    <h1 class="ad-h1">AI 時代嘅 <span class="ad-sq pink">SEO<svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M2 8 Q 14 2, 26 7 T 50 7 T 74 7 T 98 6" fill="none" stroke-width="4" stroke-linecap="round"/></svg></span>，<br>一次搞掂。</h1>
+    <p class="ad-sub">我哋幫你攞到 Google 同 AI 搜尋（ChatGPT、Perplexity）都鍾意嘅排名：AI SEO 一條龍服務、GEO 優化，仲有全自動嘅 Backlink Hub 換鏈平台。</p>
+    <div class="ad-ctas">
+      <a class="ad-btn p" href="/audit/">免費網站體檢 →</a>
+      <a class="ad-btn g" href="/hub/">Backlink Hub</a>
+    </div>
+    <div class="ad-badges">
+      <span class="ad-badge cyan">AI SEO</span>
+      <span class="ad-badge lime">GEO 優化</span>
+      <span class="ad-badge magenta">Backlink Hub</span>
+    </div>
+  </section>
+
+  <div class="ad-wash">
+    <div class="ad-wash-in">
+      <div class="ad-stats">
+        <div class="ad-stat"><b id="ad-sites">141+</b><span>已收錄出版站</span></div>
+        <div class="ad-stat"><b id="ad-verified">—</b><span>已驗證刊登</span></div>
+        <div class="ad-stat"><b>100%</b><span>出版方審批把關</span></div>
+        <div class="ad-stat"><b>24h</b><span>自動驗證回報</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ad-sec center">
+    <h2 class="ad-h2">三條增長<span class="ad-sq blue">引擎<svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M2 8 Q 14 2, 26 7 T 50 7 T 74 7 T 98 6" fill="none" stroke-width="4" stroke-linecap="round"/></svg></span></h2>
+    <p class="ad-muted" style="margin:0 0 36px">無論你想自己做，定係全托管，都有路行。</p>
+    <div class="ad-grid3">
+      <div class="ad-card">
+        <div class="ad-ic b"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2H22l-6 4.4 2.3 7.4-6.3-4.6-6.3 4.6L8 13.6 2 9.2h7.6z"/></svg></div>
+        <h3 class="ad-h3">AI SEO 一條龍</h3>
+        <p>關鍵字研究、內容、技術 SEO、GEO 優化全包。你專心做生意，排名交畀我哋。</p>
+        <a class="ad-link" href="/ai-seo/">睇服務詳情 →</a>
+      </div>
+      <div class="ad-card">
+        <div class="ad-ic l"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 10.5l7-3.5M8.5 13.5l7 3.5"/></svg></div>
+        <h3 class="ad-h3">Backlink Hub</h3>
+        <p>免費攞 API key，駁落你嘅 AI agent，自動配對高質出版站。出版方審批先上架，三角循環防互換，對 Google 安全。</p>
+        <a class="ad-link" href="/hub/">進入 Hub →</a>
+      </div>
+      <div class="ad-card">
+        <div class="ad-ic m"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg></div>
+        <h3 class="ad-h3">免費網站體檢</h3>
+        <p>輸入你嘅網址，60 秒出一份 SEO + GEO 報告，話你知邊度蝕緊流量。</p>
+        <a class="ad-link" href="/audit/">即刻體檢 →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ad-sec center">
+    <h2 class="ad-h2">點樣開始</h2>
+    <p class="ad-muted" style="margin:0 0 36px">三步，快過沖杯咖啡。</p>
+    <div class="ad-steps">
+      <div class="ad-step"><h4>免費體檢</h4><p>輸入網址，攞你嘅 SEO + GEO 分數同修復清單。</p></div>
+      <div class="ad-step"><h4>揀路行</h4><p>自己用 Backlink Hub 自動換鏈，或者簽 AI SEO 全托管。</p></div>
+      <div class="ad-step"><h4>睇住排名升</h4><p>刊登自動驗證、分數自動追蹤，每月有報告。</p></div>
+    </div>
+  </section>
+
+  <div class="ad-foot">
+    <a href="/about/">About</a><a href="/faq/">FAQ</a><a href="/blog/">Blog</a><a href="/contact/">聯絡</a><a href="/privacy-policy/">私隱政策</a><a href="/terms/">服務條款</a><br><br>
+    © 2026 Rec Moment · Gain Tune International Limited
+  </div>
+</div>
+<script>
+fetch('https://hub.recmoment.net/hub/public/stats').then(function(r){return r.json()}).then(function(s){
+  if (s.sitesListed) document.getElementById('ad-sites').textContent = s.sitesListed + '+';
+  if (s.linksVerified != null) document.getElementById('ad-verified').textContent = s.linksVerified;
+}).catch(function(){});
+</script>
