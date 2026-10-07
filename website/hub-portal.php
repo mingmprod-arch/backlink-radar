@@ -648,6 +648,7 @@
       };
       rmSetLang(lang());
       rmSetRole(localStorage.getItem('rmHubRole')||'buyer');
+      (function(){var h=(location.hash||'').replace('#','');if(h.indexOf('portal-')!==0)return;for(var r in RM_ROLES){if(RM_ROLES[r].indexOf(h)>=0){rmSetRole(r);break;}}var t=document.getElementById(h);if(t)setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},300);})();
       if(key()){rmLoadDash();rmLoadPipeline();rmLoadPub();}
     })();
     </script>
