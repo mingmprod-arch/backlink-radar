@@ -70,6 +70,8 @@
       .rmp-sec-h .idx{color:#444;font-size:11px}
       .rmp-sec-h .ttl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#999;font-weight:500}
       .rmp-sec-h .chip{margin-left:auto;font-size:10px;color:#555;border:1px solid #2a2a2a;padding:2px 8px;letter-spacing:.05em;white-space:nowrap}
+      .rmp-aichip{cursor:pointer;font-size:10px;color:#3ddc97;border:1px solid rgba(61,220,151,.4);background:rgba(61,220,151,.08);padding:2px 8px;letter-spacing:.05em;white-space:nowrap;border-radius:3px;margin-left:8px}
+      .rmp-aichip:hover{background:rgba(61,220,151,.18)}
       /* ── form ── */
       .rmp label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#555;margin:14px 0 5px}
       #rmPortal input[type="email"],#rmPortal input[type="text"],#rmPortal input[type="url"],#rmPortal input[type="number"],#rmPortal select{width:100%;background:#000!important;border:1px solid #262626!important;color:#d4d4d4!important;border-radius:0!important;padding:9px 12px!important;font-size:13px;font-family:inherit!important;box-shadow:none!important}
@@ -306,6 +308,34 @@
           t0:'Quickstart: your first match in 3 steps',st1t:'Get your API key',st1d:'Free account — the key arrives by email, click the activation link.',st2t:'Connect your AI agent',st2d:'One click copies the MCP config + sample prompts. Paste into Claude / ChatGPT / Cursor / Kimi and go.',st3t:'Run your first directory search',st3d:'No code needed — try the API right here and see the vetted publisher sites.',st4t:'Fire your first match',st4d:'Tell your agent: use hub_request_match to find publishers for me. Verified outcomes earn both sides +10~30 pts by site DR.',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'running…',tryusage:'usage this month',
           roleBuyer:'I want backlinks',rolePub:'I publish (supply side)',roleData:'Data',t7:'Data & reports',d7:'Free website audit, industry benchmarks, leaderboard — all public, no key needed.',b7a:'$ audit --free',b7b:'benchmarks →',sess:'SESSION',sstat:'status',splan:'plan',discon:'not connected',con:'connected',nav:'INDEX',heroOff:'// not connected — join free below or paste your key to open a session',foot:'no link selling · human-approved placements · paid = always sponsored'}
       };
+      // ── 「喺 AI 繼續」chips：每個 section 一撳複製預填 prompt，貼返去用戶嘅 agent ──
+      var RM_AI_PROMPTS={
+        'portal-join':{zh:'我啱啱喺 recmoment.net/hub-portal 攞咗 Backlink Hub API key，幫我將 https://hub.recmoment.net/mcp 加入我嘅 MCP config（Authorization: Bearer 我嘅 key），然後用 hub_my_account 驗證連線。',en:'I just got a Backlink Hub API key from recmoment.net/hub-portal. Add https://hub.recmoment.net/mcp to my MCP config (Authorization: Bearer <my key>), then verify the connection with hub_my_account.'},
+        'portal-onboard':{zh:'帶我行一次 Backlink Hub zero-touch loop：先 hub_analyze_content 分析我個站，再 hub_submit_site 提交，然後 hub_auto_match subscribe 我嘅關鍵字。我個站係：（貼你嘅 URL）',en:'Walk me through the Backlink Hub zero-touch loop: hub_analyze_content on my site, then hub_submit_site, then hub_auto_match subscribe with my keywords. My site is: (paste your URL)'},
+        'portal-dash':{zh:'用 hub_my_account 總結我嘅 Backlink Hub 帳戶：積分、今月用量、pending approvals、市場 hot topics，然後俾 3 個下一步建議。',en:'Summarize my Backlink Hub account with hub_my_account: points, monthly usage, pending approvals, market hot topics — then give me 3 next-step recommendations.'},
+        'portal-submit':{zh:'幫我用 hub_submit_site 提交我嘅站去 Backlink Hub 審批：（貼你嘅 URL）。如果有項目唔合格，逐項解釋點修。',en:'Submit my site for Backlink Hub vetting with hub_submit_site: (paste your URL). If any check fails, explain each fix step by step.'},
+        'portal-wish':{zh:'幫我用 hub_set_wishlist 更新我網站嘅 wishlist。我而家想要嘅題材：（話俾 AI 知你想要咩題材，例如 AI SEO、SaaS 工具）',en:'Update my site wishlist with hub_set_wishlist. Topics I want right now: (tell the AI, e.g. AI SEO, SaaS tools)'},
+        'portal-runs':{zh:'用 hub_auto_match action:list 同 /v1/hub/runs 睇我嘅配對狀態。有 pending proposal 就幫我跟進：approve、reject 定起草 pitch。',en:'Check my matching status with hub_auto_match action:list and /v1/hub/runs. For any pending proposal, help me follow up: approve, reject, or draft the pitch.'},
+        'portal-pub':{zh:'列出我 publisher inbox 嘅 pending proposals，逐個俾意見：邊個應該 approve、邊個 reject，講清楚原因。',en:'List the pending proposals in my publisher inbox. Advise on each: which to approve, which to reject, with clear reasons.'},
+        'portal-data':{zh:'幫我攞 Backlink Hub 公開數據（/hub/public/benchmarks 同 /hub/public/stats），分析我呢個 niche 而家嘅出稿機會，俾一個行動清單。',en:'Pull the Backlink Hub public data (/hub/public/benchmarks and /hub/public/stats), analyze placement opportunities in my niche, and give me an action list.'}
+      };
+      window.rmRenderAIChips=function(){
+        var zh=lang()!=='en';
+        Object.keys(RM_AI_PROMPTS).forEach(function(id){
+          var sec=document.getElementById(id);if(!sec)return;
+          var h=sec.querySelector('.rmp-sec-h');if(!h)return;
+          var old=h.querySelector('.rmp-aichip');if(old)old.remove();
+          var b=rmEl('span','rmp-aichip',zh?'喺 AI 繼續 →':'Continue in AI →');
+          b.onclick=function(){
+            var p=RM_AI_PROMPTS[id][zh?'zh':'en'];
+            var done=function(){b.textContent=zh?'已複製 ✓ 貼落你嘅 AI':'Copied ✓ paste into your AI';setTimeout(rmRenderAIChips,2200);};
+            var clip=null;try{clip=navigator.clipboard?navigator.clipboard.writeText:null;}catch(e){}
+            if(clip){navigator.clipboard.writeText(p).then(done,function(){window.prompt(zh?'手動複製：':'Copy manually:',p);});}
+            else{window.prompt(zh?'手動複製：':'Copy manually:',p);}
+          };
+          h.appendChild(b);
+        });
+      };
       window.rmSetLang=function(l){
         var d=I18N[l]||I18N.zh;
         document.querySelectorAll('#rmPortal [data-i18n]').forEach(function(e){var k=e.getAttribute('data-i18n');if(d[k])e.textContent=d[k]});
@@ -314,6 +344,7 @@
         localStorage.setItem('rmHubLang',l);
         rmRenderOnboard();
         rmHero();
+        rmRenderAIChips();
       };
       function lang(){return localStorage.getItem('rmHubLang')||'zh'}
       function T(k){return (I18N[lang()]||I18N.zh)[k]||k}
