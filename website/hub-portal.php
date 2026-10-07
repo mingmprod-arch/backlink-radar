@@ -1,7 +1,4 @@
 
-// ── Hub 會員 Portal（/hub-portal/）：terminal console 介面 + 中英切換 + onboarding checklist ──
-function recmoment_hub_portal_shortcode() {
-    ob_start(); ?>
     <div id="rmPortal" class="rmp">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
     <style>
@@ -117,6 +114,11 @@ function recmoment_hub_portal_shortcode() {
       .rmp .pill.ok{color:#00d9a3;border-color:#00d9a355}
       .rmp .pill.wait{color:#d29922;border-color:#d2992255}
       .rmp .pill.no{color:#f85149;border-color:#f8514955}
+      .rmp-tabs{display:flex;border-bottom:1px solid #222}
+      .rmp-tabs button{flex:1;background:transparent;border:0;border-right:1px solid #1c1c1c;color:#777;font-family:inherit;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:12px 8px;cursor:pointer}
+      .rmp-tabs button:last-child{border-right:0}
+      .rmp-tabs button.on{color:#00d9a3;background:rgba(0,217,163,.06);box-shadow:inset 0 -2px 0 #00d9a3}
+      .rmp .rolehide{display:none}
       /* ── footer ── */
       .rmp-foot{border-top:1px solid #222;padding:14px 24px;font-size:10px;letter-spacing:.1em;color:#444;text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
       /* ── theme footer: match dark terminal ── */
@@ -150,6 +152,12 @@ function recmoment_hub_portal_shortcode() {
       <div class="rmp-hout" id="rmHeroOut" data-i18n="heroOff">// 未連接 — 下面免費 join 或貼 key 開 session</div>
     </div>
 
+    <div class="rmp-tabs">
+      <button id="rmRoleBuyer" class="on" onclick="rmSetRole('buyer')" data-i18n="roleBuyer">我要 Backlink</button>
+      <button id="rmRolePub" onclick="rmSetRole('pub')" data-i18n="rolePub">我出稿（出版方）</button>
+      <button id="rmRoleData" onclick="rmSetRole('data')" data-i18n="roleData">數據</button>
+    </div>
+
     <div class="rmp-grid">
       <aside class="rmp-side">
         <div class="rmp-sblk">
@@ -160,7 +168,7 @@ function recmoment_hub_portal_shortcode() {
         </div>
         <div class="rmp-sblk">
           <div class="rmp-lbl" data-i18n="nav">目錄</div>
-          <a class="rmp-nv" href="#portal-join"><i>01</i>credentials</a><a class="rmp-nv" href="#portal-onboard"><i>02</i>quickstart</a><a class="rmp-nv" href="#portal-dash"><i>03</i>account</a><a class="rmp-nv" href="#portal-submit"><i>04</i>submit-site</a><a class="rmp-nv" href="#portal-wish"><i>05</i>wishlist</a><a class="rmp-nv" href="#portal-runs"><i>06</i>runs</a><a class="rmp-nv" href="#portal-upgrade"><i>07</i>upgrade</a>
+          <a class="rmp-nv" href="#portal-join"><i>01</i>credentials</a><a class="rmp-nv" href="#portal-onboard"><i>02</i>quickstart</a><a class="rmp-nv" href="#portal-dash"><i>03</i>account</a><a class="rmp-nv" href="#portal-submit"><i>04</i>submit-site</a><a class="rmp-nv" href="#portal-wish"><i>05</i>wishlist</a><a class="rmp-nv" href="#portal-runs"><i>06</i>runs</a><a class="rmp-nv" href="#portal-upgrade"><i>07</i>upgrade</a><a class="rmp-nv" href="#portal-pipe"><i>08</i>pipeline</a><a class="rmp-nv" href="#portal-pub"><i>09</i>desk</a><a class="rmp-nv" href="#portal-data"><i>10</i>data</a>
         </div>
       </aside>
       <div class="rmp-vb"></div>
@@ -259,6 +267,23 @@ function recmoment_hub_portal_shortcode() {
       </div>
     </div>
 
+    <div class="rmp-sec hidden" id="portal-pub">
+      <div class="rmp-sec-h"><span class="idx">// 09</span><span class="ttl">Publisher Desk</span><span class="chip">publisher</span></div>
+      <div>
+        <p class="hint" id="rmPubHint"></p>
+        <div id="rmPubList"></div>
+        <div class="hint" id="rmPubMsg"></div>
+      </div>
+    </div>
+
+    <div class="rmp-sec hidden" id="portal-data">
+      <div class="rmp-sec-h"><span class="idx">// 10</span><span class="ttl" data-i18n="t7">數據與報告</span><span class="chip">public</span></div>
+      <div>
+        <p class="hint" data-i18n="d7">免費網站體檢、行業 benchmark、領袖榜——全部公開數據，唔使 key 都睇到。</p>
+        <a class="btn ghost" style="margin-right:8px" href="/audit/" data-i18n="b7a">$ audit --free</a><a class="btn ghost" href="/hub/" data-i18n="b7b">benchmarks →</a>
+      </div>
+    </div>
+
       </div>
     </div>
 
@@ -274,12 +299,12 @@ function recmoment_hub_portal_shortcode() {
       var I18N={
         zh:{t1:'取得 API key（免費）',d1:'免費計劃：目錄查詢每月 20 次。之後用積分解鎖配對——交站審批通過後賺分（+0.5/DR，DR≥10）、成交驗證 +10~30（按站 DR）。',b1:'$ join --free',d1b:'已經有 key？直接連接：',b1b:'connect',t2:'帳戶狀態',s1:'積分結餘',s2:'本月查詢',ref:'推薦碼',t3:'提交網站賺分',d3:'交一個你擁有、肯收投稿嘅站。DR 越高分越多（封頂 50，DR≥10 先計）。審批通過先落袋——垃圾站刷唔到分；PBN 拒收，同一 domain 全網只計一次。',b3:'$ submit --earn',t4:'Wishlist（出版方）',d4:'話俾買家知你而家想收咩題——撞中 wishlist 嘅配對請求 +3 分排前。',l4:'想收嘅題（逗號分隔）',b4:'$ wishlist --set',
           neterr:'網絡錯誤，稍後再試',keybad:'key 格式唔啱（rmh_ 開頭 48 位 hex）',linked:'✓ 已連接',keyonce:'✓ 你嘅 key（只顯示一次，請即抄低）：',keysent:'✓ API key 已寄去你嘅 email——撳入面條激活連結即用（冇收到就睇垃圾郵件）',subok:'✓ 已提交，審批通過後賺 ',pts:' 分；而家排隊審核。',subok0:'✓ 已提交，排隊審核中（DR 未達 10 唔計分）。',wishok:'✓ 已更新：',recent:'最近：',t5:'Runs（配對紀錄）',noruns:'仲未有配對紀錄。用 match 工具發起第一次配對啦。',t6:'升級解鎖',d6:'Member $19 一次性：100 次/月查詢。Pro $49/月：無限查詢 + 自動配對。Agency $199/月：25 站 + 白標報告。500 積分 $29 一次性：唔想訂閱就買分。付款後 plan 自動升級。',copied:'✓ 已複製',paid:'✓ 付款成功！多謝支持。升級會喺 24 小時內生效，請用付款 email 喺下面 connect 你嘅 key。',
-          t0:'快速上手：3 步出第一個 match',st1t:'取得 API key',st1d:'免費帳戶，key 經 email 派發，撳激活連結即用。',st2t:'駁你嘅 AI agent',st2d:'一撳複製 MCP 設定 + 示範指令，貼落 Claude / Cursor / Kimi 即用。',st3t:'跑第一次目錄查詢',st3d:'唔使寫 code——撳掣即場試 API，睇返已審核出版站。',st4t:'發第一個配對',st4d:'喺你嘅 agent 講：用 hub_request_match 幫我搵出版方。成交驗證雙方 +10~30 分（按站 DR）。',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'跑緊…',tryusage:'本月用量',
-          sess:'工作階段',sstat:'狀態',splan:'計劃',discon:'未連接',con:'已連接',nav:'目錄',heroOff:'// 未連接 — 下面免費 join 或貼 key 開 session',foot:'唔賣 link · 出版方人工審批 · 付費 placement 一定 sponsored'},
+          t0:'快速上手：3 步出第一個 match',st1t:'取得 API key',st1d:'免費帳戶，key 經 email 派發，撳激活連結即用。',st2t:'駁你嘅 AI agent',st2d:'一撳複製 MCP 設定 + 示範指令，貼落 Claude / ChatGPT / Cursor / Kimi 即用。',st3t:'跑第一次目錄查詢',st3d:'唔使寫 code——撳掣即場試 API，睇返已審核出版站。',st4t:'發第一個配對',st4d:'喺你嘅 agent 講：用 hub_request_match 幫我搵出版方。成交驗證雙方 +10~30 分（按站 DR）。',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'跑緊…',tryusage:'本月用量',
+          roleBuyer:'我要 Backlink',rolePub:'我出稿（出版方）',roleData:'數據',t7:'數據與報告',d7:'免費網站體檢、行業 benchmark、領袖榜——全部公開數據，唔使 key 都睇到。',b7a:'$ audit --free',b7b:'benchmarks →',sess:'工作階段',sstat:'狀態',splan:'計劃',discon:'未連接',con:'已連接',nav:'目錄',heroOff:'// 未連接 — 下面免費 join 或貼 key 開 session',foot:'唔賣 link · 出版方人工審批 · 付費 placement 一定 sponsored'},
         en:{t1:'Get your API key (free)',d1:'Free plan: 20 directory queries/month. Unlock matches with points — submit sites (+0.5/DR once approved, DR≥10), verified outcomes +10~30 by site DR.',b1:'$ join --free',d1b:'Already have a key? Connect it:',b1b:'connect',t2:'Account',s1:'points balance',s2:'queries this month',ref:'Referral link',t3:'Submit a site, earn points',d3:'Submit a site you own that accepts contributions. Higher DR earns more (cap 50, DR≥10 to qualify). Points land only after review approval — spam earns nothing. PBNs rejected, one grant per domain network-wide.',b3:'$ submit --earn',t4:'Wishlist (publishers)',d4:'Tell buyers what topics you want right now — matches hitting your wishlist score +3.',l4:'Wanted topics (comma-separated)',b4:'$ wishlist --set',
           neterr:'Network error, try again later',keybad:'Invalid key format (rmh_ + 48 hex)',linked:'✓ Connected',keyonce:'✓ Your key (shown once — save it now): ',keysent:'✓ API key sent to your email — click the activation link inside to start (check spam if missing)',subok:'✓ Submitted — ',pts:' pts land once approved; now in review queue.',subok0:'✓ Submitted, in review queue (DR below 10 earns no points).',wishok:'✓ Updated: ',recent:'latest: ',t5:'Runs (match history)',noruns:'No runs yet — fire your first match request to get going.',t6:'Upgrade',d6:'Member $19 one-time: 100 queries/mo. Pro $49/mo: unlimited queries + auto-match. Agency $199/mo: 25 sites + white-label reports. 500 points for $29 one-time — no subscription needed. Plan upgrades automatically after payment.',copied:'✓ Copied',paid:'✓ Payment received — thank you! Your upgrade activates within 24 hours. Connect your key below with the email you paid with.',
-          t0:'Quickstart: your first match in 3 steps',st1t:'Get your API key',st1d:'Free account — the key arrives by email, click the activation link.',st2t:'Connect your AI agent',st2d:'One click copies the MCP config + sample prompts. Paste into Claude / Cursor / Kimi and go.',st3t:'Run your first directory search',st3d:'No code needed — try the API right here and see the vetted publisher sites.',st4t:'Fire your first match',st4d:'Tell your agent: use hub_request_match to find publishers for me. Verified outcomes earn both sides +10~30 pts by site DR.',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'running…',tryusage:'usage this month',
-          sess:'SESSION',sstat:'status',splan:'plan',discon:'not connected',con:'connected',nav:'INDEX',heroOff:'// not connected — join free below or paste your key to open a session',foot:'no link selling · human-approved placements · paid = always sponsored'}
+          t0:'Quickstart: your first match in 3 steps',st1t:'Get your API key',st1d:'Free account — the key arrives by email, click the activation link.',st2t:'Connect your AI agent',st2d:'One click copies the MCP config + sample prompts. Paste into Claude / ChatGPT / Cursor / Kimi and go.',st3t:'Run your first directory search',st3d:'No code needed — try the API right here and see the vetted publisher sites.',st4t:'Fire your first match',st4d:'Tell your agent: use hub_request_match to find publishers for me. Verified outcomes earn both sides +10~30 pts by site DR.',copyai:'Copy for AI',tryit:'$ search --limit 3',trywait:'running…',tryusage:'usage this month',
+          roleBuyer:'I want backlinks',rolePub:'I publish (supply side)',roleData:'Data',t7:'Data & reports',d7:'Free website audit, industry benchmarks, leaderboard — all public, no key needed.',b7a:'$ audit --free',b7b:'benchmarks →',sess:'SESSION',sstat:'status',splan:'plan',discon:'not connected',con:'connected',nav:'INDEX',heroOff:'// not connected — join free below or paste your key to open a session',foot:'no link selling · human-approved placements · paid = always sponsored'}
       };
       window.rmSetLang=function(l){
         var d=I18N[l]||I18N.zh;
@@ -418,7 +443,7 @@ function recmoment_hub_portal_shortcode() {
           }).catch(function(){});
           fetch(API+'/v1/hub/referral-code',{headers:authed()}).then(function(r){return r.json()})
           .then(function(r2){document.getElementById('rmRef').textContent=r2.shareUrl||r2.code});
-          ['portal-onboard','portal-dash','portal-submit','portal-wish','portal-runs','portal-upgrade'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
+          ['portal-onboard','portal-dash','portal-submit','portal-wish','portal-runs','portal-upgrade','portal-data'].forEach(function(id){document.getElementById(id).classList.remove('hidden')});
           rmRenderOnboard();
           rmLoadRuns();
         }).catch(function(){});
@@ -504,7 +529,7 @@ function recmoment_hub_portal_shortcode() {
             var s=(l.stage==null?0:l.stage);if(l.rescoreAt)s=4;
             if(s===4)rescored++;else stages[s]=(stages[s]||0)+1;
             if(l.rescoreAt&&l.score!=null){var dl=l.rescore-l.score;if(dl>0)up++;else if(dl<0)down++;else flat++;}
-            if(l.pitchAt&&ab[l.pitchVariant]){ab[l.pitchVariant].sent++;if(l.pitchOpenedAt)ab[l.pitchVariant].open++;}
+            if(l.pitchAt){if(ab[l.pitchVariant]){ab[l.pitchVariant].sent++;if(l.pitchOpenedAt)ab[l.pitchVariant].open++;}}
           });
           var stats=document.getElementById('rmPipeStats');stats.textContent='';
           [['Total',leads.length],['D0',stages[0]],['D3',stages[1]],['D7',stages[2]],['完成',stages[3]],['覆測',rescored],['📈',up],['📉',down],['➖',flat],
@@ -569,10 +594,61 @@ function recmoment_hub_portal_shortcode() {
       document.getElementById('rmPipePitchClose').onclick=function(){
         document.getElementById('rmPipePitch').classList.add('hidden');rmPitchEmail=null;
       };
+      window.rmLoadPub=function(){
+        fetch(API+'/v1/hub/publisher/inbox',{headers:authed()}).then(function(r){if(!r.ok)throw 0;return r.json()})
+        .then(function(d){
+          document.getElementById('portal-pub').classList.remove('hidden');
+          var zh=lang()!=='en';
+          document.getElementById('rmPubHint').textContent=zh?'你擁有嘅站收到嘅配對提案：你唔批准就乜都唔會出街。裝咗 WP 插件嘅站會自動插入舊文＋drip 2–14 日＋anchor 輪換；呢度係手動控制台。':'Match proposals for sites you own — nothing goes live without your approval. Sites running the WP plugin get auto insert into old posts + 2–14 day drip + anchor rotation; this is the manual console.';
+          var list=document.getElementById('rmPubList');list.textContent='';
+          var items=d.items||[];
+          var pend=items.filter(function(x){return x.status==='pending';});
+          var appr=items.filter(function(x){if(x.status!=='approved')return false;return !x.deliveredAt;});
+          var done=items.filter(function(x){return !!x.deliveredAt;});
+          function msg(t){document.getElementById('rmPubMsg').textContent=t||'';}
+          function act(url,body,btn){btn.disabled=true;
+            fetch(API+url,{method:'POST',headers:authed(),body:JSON.stringify(body)})
+            .then(function(r){if(!r.ok)throw 0;return r.json();})
+            .then(function(){rmLoadPub();}).catch(function(){btn.disabled=false;msg(zh?'失敗，再試一次':'Failed — try again');});}
+          function grp(label,arr){
+            if(!arr.length)return;
+            list.appendChild(rmEl('div','hint mono',label+' ('+arr.length+')'));
+            arr.forEach(function(x){
+              var box=rmEl('div');box.style.cssText='border:1px solid #30363d;border-radius:8px;padding:10px 12px;margin:8px 0';
+              var top=rmEl('div','mono');top.style.fontSize='12.5px';top.textContent=(x.anchorText||'(no anchor)')+' -> '+x.targetUrl;box.appendChild(top);
+              if(x.paid)box.appendChild(rmEl('span','chip','paid / sponsored'));
+              if(x.instruction){var it=x.instruction.suggestedParagraph||(typeof x.instruction==='string'?x.instruction:null);if(it){var ins=rmEl('div','hint');ins.style.cssText='margin-top:6px;font-size:12px;white-space:pre-wrap';ins.textContent=String(it).slice(0,220);box.appendChild(ins);}}
+              var row=rmEl('div');row.style.cssText='margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center';
+              box.appendChild(row);
+              if(x.status==='pending'){
+                var b1=rmEl('button','rmp-btn',zh?'批准':'Approve');b1.onclick=function(){act('/v1/hub/matches/'+x.matchId+'/approve',{siteId:x.siteId,approve:true},b1);};row.appendChild(b1);
+                var b2=rmEl('button','rmp-btn ghost',zh?'拒絕':'Reject');b2.onclick=function(){act('/v1/hub/matches/'+x.matchId+'/approve',{siteId:x.siteId,approve:false},b2);};row.appendChild(b2);
+              }else if(x.status==='approved'?(!x.deliveredAt):false){
+                row.appendChild(rmEl('span','hint',zh?'等刊登中（插件 drip 2–14 日）':'Awaiting placement (plugin drips 2–14d)'));
+                var b3=rmEl('button','rmp-btn',zh?'標記已刊登':'Mark live');b3.onclick=function(){act('/v1/hub/publisher/inbox/ack',{matchId:x.matchId,siteId:x.siteId},b3);};row.appendChild(b3);
+              }else if(x.deliveredAt){
+                var b4=rmEl('button','rmp-btn ghost',zh?'撤 link':'Remove link');b4.onclick=function(){if(!confirm(zh?'確定撤走呢條 link？對方會收到通知，積分會扣返。':'Remove this link? The buyer is notified and points are clawed back.'))return;act('/v1/hub/outcomes',{matchId:x.matchId,siteId:x.siteId,outcome:'removed'},b4);};row.appendChild(b4);
+              }
+              list.appendChild(box);
+            });
+          };
+          grp(zh?'待審批':'Pending approval',pend);
+          grp(zh?'已批准 · 未刊登':'Approved · awaiting placement',appr);
+          grp(zh?'已刊登':'Live',done);
+          if(!items.length)list.appendChild(rmEl('div','hint',zh?'暫時冇提案。交你嘅站入目錄（04 submit-site），配對到就會喺呢度出現。':'No proposals yet. Submit your sites (04 submit-site) and matches will land here.'));
+        }).catch(function(){});
+      };
+      var RM_ROLES={buyer:['portal-dash','portal-runs','portal-upgrade'],pub:['portal-submit','portal-wish','portal-pub'],data:['portal-data','portal-pipe']};
+      window.rmSetRole=function(rr){
+        localStorage.setItem('rmHubRole',rr);
+        var map={buyer:'rmRoleBuyer',pub:'rmRolePub',data:'rmRoleData'};
+        for(var k in map){var b=document.getElementById(map[k]);if(b)b.className=(k===rr?'on':'');}
+        var show={};(RM_ROLES[rr]||[]).forEach(function(id){show[id]=1;});
+        ['portal-dash','portal-runs','portal-upgrade','portal-submit','portal-wish','portal-pub','portal-data','portal-pipe'].forEach(function(id){var e=document.getElementById(id);if(!e)return;if(show[id])e.classList.remove('rolehide');else e.classList.add('rolehide');});
+      };
       rmSetLang(lang());
-      if(key()){rmLoadDash();rmLoadPipeline();}
+      rmSetRole(localStorage.getItem('rmHubRole')||'buyer');
+      if(key()){rmLoadDash();rmLoadPipeline();rmLoadPub();}
     })();
     </script>
-    <?php return ob_get_clean();
-}
-add_shortcode('recmoment_hub_portal', 'recmoment_hub_portal_shortcode');
+    
