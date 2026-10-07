@@ -14,6 +14,7 @@ contract that keeps them in sync.
 |---|---|---|---|
 | 1.0.x | `v1` (`/v1/hub/*`) | any | Initial release |
 | 1.1.0 | `v1` + `portal` deep-link field in every `hub_*` tool response | ≥ 2026-10-07 build (hash deep-link + role tabs) | SKILL ↔ Portal two-way loop |
+| 1.2.0 | `v1` + `nextActions` in `/hub/public/audit` response | ≥ 2026-10-07 build | Agentic campaign playbook (Workflow 7/8); additive field, older skills unaffected |
 
 Rules:
 

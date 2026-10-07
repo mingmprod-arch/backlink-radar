@@ -107,6 +107,47 @@ Honesty rule: say clearly that no free API reproduces Ahrefs DR, and DR
 is a triage metric — topical relevance and organic traffic matter more
 when judging a link target.
 
+## Workflow 7 — Done-for-you link campaign ("get me 3 DR60+ links")
+
+When the user gives a one-liner goal like "幫我攞 3 條 DR60+ link" or "get
+me links to <url>", run the full agentic loop — this is the flagship
+zero-touch workflow:
+
+1. **Understand the target.** `hub_analyze_content` on the target URL (or
+   pasted draft) → take its `keywords` and `niches` output verbatim. No
+   need to ask the user for keywords.
+2. **Match with a DR floor.** `hub_request_match` with
+   `{ targetUrl, keywords, drMin: 60 }` (use the user's stated floor;
+   default 30 if unstated). The directory's DR comes from OpenPageRank and
+   is refreshed in bulk.
+3. **Draft pitches.** For each proposal, `hub_draft_pitch` — angles are
+   grounded in the publisher's real `topicTerms`, not generic flattery.
+4. **Send + stand watch.** Send via the configured email channel, then
+   `hub_auto_match subscribe` with the same keywords so newly approved
+   sites that fit auto-create proposals later.
+5. **Track to verification.** When a placement goes live,
+   `hub_report_outcome { outcome: "published", liveUrl }` — the server
+   fetches the page, verifies the link exists and checks its `rel`, then
+   both sides earn DR-weighted points. Verified outcomes also raise that
+   publisher's future match rank (the flywheel), so reporting outcomes
+   makes every subsequent match better.
+6. **Hand back the portal link** from each response's `portal` field.
+
+Report progress as a pipeline (matched → pitched → sent → published →
+verified), not as a wall of text.
+
+## Workflow 8 — Consume an audit as an agent (nextActions JSON)
+
+`POST https://hub.recmoment.net/hub/public/audit {"url": ...}` returns a
+strict-scored audit. Alongside human-readable gaps it includes
+**`nextActions`**: machine-readable task cards, each with `gapId`, `task`,
+`howTo`, `toolHint` (`edit_html` / `server_config` / `write_content` /
+`backlink_hub`), `effort`, and `impact`. When the audit's authority score
+is <30, a `hubAction` card is included with a ready-made
+`hub_request_match` call. When the user owns the site, execute the cards
+in priority order instead of re-explaining the report — fix what your
+`toolHint` covers, then route the `backlink_hub` card into Workflow 7.
+
 ## Hard rules
 
 - Never promise dofollow links. Whether a link passes equity is the linking

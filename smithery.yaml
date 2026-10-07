@@ -1,0 +1,21 @@
+# Smithery deployment config — Backlink Hub is a REMOTE server.
+# No build needed: users connect straight to the hosted streamable-http endpoint.
+version: 1
+# Smithery "remote" type: no runtime to build, we just declare the endpoint.
+type: remote
+remote:
+  url: https://hub.recmoment.net/mcp
+  transport: streamable-http
+  headers:
+    Authorization: Bearer ${HUB_API_KEY}
+# Users paste their free key from https://recmoment.net/hub-portal/
+configSchema:
+  type: object
+  required: [hubApiKey]
+  properties:
+    hubApiKey:
+      type: string
+      title: Backlink Hub API key
+      description: Free key from https://recmoment.net/hub-portal/ (starts with rmh_)
+exampleConfig:
+  hubApiKey: rmh_your_key_here
