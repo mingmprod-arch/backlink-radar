@@ -259,6 +259,7 @@
       <div>
         <p class="hint">免費體檢 → email 捕捉 → 第 3/7/14 日跟進 → 第 30 日覆測。一眼睇晒成條 pipeline。</p>
         <div id="rmPipeStats" class="hint mono" style="margin:8px 0 12px"></div>
+        <div id="rmChipStats" style="margin:0 0 12px"></div>
         <div id="rmPipeTable"></div>
         <div id="rmPipePitch" class="hidden" style="margin-top:12px">
           <pre id="rmPipePitchTxt" class="mono" style="white-space:pre-wrap;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:10px;font-size:12px;max-height:260px;overflow:auto"></pre>
@@ -574,6 +575,21 @@
             c.appendChild(n);c.appendChild(t);stats.appendChild(c);
           });
           var box=document.getElementById('rmPipeTable');box.textContent='';
+          // ── 「喺 AI 繼續」chip 點擊統計（同一頁一眼睇晒兩條數）──
+          fetch(API+'/v1/hub/ai-chip',{headers:authed()}).then(function(r){return r.ok?r.json():null}).then(function(cd){
+            if(!cd)return;
+            var cs=document.getElementById('rmChipStats');cs.textContent='';
+            cs.appendChild(rmEl('div','hint','「喺 AI 繼續」chip 點擊（多 = 嗰步最卡關）：'));
+            var NAMES={'portal-join':'01 攞 key','portal-onboard':'02 上車','portal-dash':'03 帳戶','portal-submit':'04 交站','portal-wish':'05 wishlist','portal-runs':'06 runs','portal-pub':'09 出版方','portal-data':'10 數據'};
+            (cd.sections||[]).forEach(function(s){
+              var c=rmEl('div','rmp-stat');
+              c.style.cssText='display:inline-block;margin:0 14px 8px 0;text-align:center';
+              var n=rmEl('div',null,String(s.total));n.style.cssText='font-size:22px;font-weight:700;color:#3ddc97';
+              var t=rmEl('div',null,(NAMES[s.section]||s.section)+' · 7日+'+s.last7d);t.style.cssText='font-size:11px;color:#8b949e';
+              c.appendChild(n);c.appendChild(t);cs.appendChild(c);
+            });
+            if(!(cd.sections||[]).length)cs.appendChild(rmEl('div','hint mono','暫時未有人撳'));
+          }).catch(function(){});
           if(!leads.length){box.appendChild(rmEl('div','hint','No leads yet — /audit/ 頁留 email 先會入嚟'));return}
           var tb=rmEl('table','runs'),tr=rmEl('tr');
           ['email','site','score','stage','gaps','captured','pitch'].forEach(function(c){tr.appendChild(rmEl('th',null,c))});
