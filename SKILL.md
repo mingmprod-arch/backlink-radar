@@ -148,6 +148,30 @@ is <30, a `hubAction` card is included with a ready-made
 in priority order instead of re-explaining the report — fix what your
 `toolHint` covers, then route the `backlink_hub` card into Workflow 7.
 
+## Workflow 9 — Set up a Write-for-Us page wired to the Hub
+
+When the user wants their site to *receive* pitches (become a publisher):
+
+1. Use `references/write-for-us-template.html` — fill the four placeholders
+   (`{{SITE_NAME}}`, `{{NICHE}}`, `{{CONTACT_EMAIL}}`, `{{HUB_REF_URL}}`;
+   get the referral URL from `hub_my_account → referralUrl`) and publish it
+   at `/write-for-us/` on their platform (WordPress: page + Custom HTML
+   block; Shopify: page; static: drop the file in).
+2. Run `hub_submit_site` on the site — the Hub auto-detects the new page
+   as `contributeUrl`, so future matching proposals land on the owner with
+   zero extra wiring.
+3. Have the owner set `hub_set_wishlist` — the template's "fast lane" CTA
+   tells pitchers their topic is matched against the live wishlist, which
+   is exactly how the Hub prioritizes.
+4. Optional: publishers turn on `autoApprove` for pre-authorized proposals,
+   and ring members can negotiate terms peer-to-peer with
+   `hub_proposal_message`; keep the ring healthy by checking
+   `hub_ring_balance` weekly — favor whoever is owed links next.
+
+Every Write-for-Us page deployed this way is also a directory signal: the
+Hub's vetting re-crawls it, so the site's topicTerms and listing stay
+fresh automatically.
+
 ## Hard rules
 
 - Never promise dofollow links. Whether a link passes equity is the linking

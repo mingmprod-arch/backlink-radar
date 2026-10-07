@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+  Write-for-Us page template — Backlink Radar skill, Workflow 9.
+  How to use (agent instructions):
+  1. Replace {{SITE_NAME}}, {{NICHE}}, {{CONTACT_EMAIL}}, {{HUB_REF_URL}}.
+     {{HUB_REF_URL}} = the site owner's hub referral URL (hub_my_account → referralUrl),
+     or https://recmoment.net/hub/ if unknown.
+  2. Publish as /write-for-us/ (WordPress: new page, Custom HTML block;
+     Shopify: new page; static: drop the file in).
+  3. Tell the owner to run hub_submit_site — the Hub auto-detects this page
+     as the site's contributeUrl and routes matching proposals to the owner.
+  Why this page exists: it turns the site into a Hub publisher magnet —
+  guest authors find the page, the owner gets vetted pitches via the Hub,
+  and the Hub's matching engine learns the site's real topics.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write for Us — {{SITE_NAME}}</title>
+<meta name="description" content="Guest post guidelines for {{SITE_NAME}}: what we publish, what we don't, and how to pitch us.">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1f2430; max-width: 720px; margin: 0 auto; padding: 48px 20px; line-height: 1.7; }
+  h1 { font-size: 30px; letter-spacing: -0.5px; margin-bottom: 8px; }
+  h2 { font-size: 19px; margin-top: 36px; }
+  .sub { color: #6b7280; margin-top: 0; }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  .no { color: #b91c1c; }
+  .yes { color: #15803d; }
+  .cta { background: #f4f2ff; border: 1px solid #e3defc; border-radius: 14px; padding: 22px 24px; margin-top: 40px; }
+  .cta a { display: inline-block; background: #6C63FF; color: #fff; font-weight: 700; text-decoration: none; border-radius: 10px; padding: 12px 22px; margin-top: 10px; }
+  .fine { color: #9ca3af; font-size: 13px; margin-top: 48px; }
+</style>
+</head>
+<body>
+
+<h1>Write for {{SITE_NAME}}</h1>
+<p class="sub">We publish practical, first-hand {{NICHE}} content. If you actually do the work, we want your pitch.</p>
+
+<h2>What we accept</h2>
+<ul class="yes">
+  <li>Original how-to guides and case studies with real numbers (1,200+ words)</li>
+  <li>First-hand experience — tools you used, campaigns you ran, mistakes you made</li>
+  <li>One relevant, editorially-placed link to your site where it genuinely helps the reader</li>
+</ul>
+
+<h2>What we don't accept</h2>
+<ul class="no">
+  <li>AI-generated drafts with no original insight (we check)</li>
+  <li>Spun, rewritten, or previously published content</li>
+  <li>Exact-match anchor stuffing, casino/cBD/adult verticals, or "write anything for a link" offers</li>
+  <li>Paid placements that aren't disclosed (sponsored posts are labelled, always)</li>
+</ul>
+
+<h2>How to pitch</h2>
+<ul>
+  <li>Send 2–3 headline options with a 3-line outline each — not a full draft</li>
+  <li>Tell us which of our existing articles your piece complements</li>
+  <li>We reply within 7 days if it's a fit. No reply = not this time.</li>
+</ul>
+
+<div class="cta">
+  <strong>The fast lane:</strong> we review pitches through our Backlink Hub publisher page.
+  Pitch there and your topic is matched against what we're actively looking for this month —
+  wishlist matches get answered first.
+  <br>
+  <a href="{{HUB_REF_URL}}">Pitch via Backlink Hub →</a>
+  <p style="color:#6b7280;font-size:14px">Prefer email? {{CONTACT_EMAIL}} — subject line "Guest post: [your topic]".</p>
+</div>
+
+<p class="fine">Editorial integrity: links are earned by content quality, never sold without disclosure.
+We reserve the right to edit for clarity and to remove links that stop being relevant.</p>
+
+</body>
+</html>
