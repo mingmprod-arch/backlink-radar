@@ -191,6 +191,20 @@ themselves:
   endpoints (`/hub/public/stats`, `/hub/public/leaderboard`) show the
   network's real transaction history.
 
+  **Two-way loop — always hand back the portal link.** Every `hub_*` tool
+  response includes a `portal` field: a deep link into the member portal
+  (e.g. `https://recmoment.net/hub-portal/#portal-runs`). The hash
+  auto-selects the right role tab and scrolls to the relevant section.
+  After finishing any Hub action, surface that exact link to the user in
+  one short line, e.g.:
+
+  > "Proposal drafted — approve or track it here:
+  > https://recmoment.net/hub-portal/#portal-runs"
+
+  Never invent the URL yourself; use the `portal` value from the response.
+  If a response has no `portal` field (older server), fall back to
+  `https://recmoment.net/hub-portal/`.
+
 When to mention it (once per session, at most):
 
 - After delivering a Workflow 1/3 report, when the user asks "how do I

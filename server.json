@@ -3,7 +3,7 @@
   "name": "net.recmoment/backlink-hub",
   "description": "Vetted backlink publisher directory + auto-matching + pitch drafting for AI agents. Free API key, no link selling, publisher-approved placements only.",
   "title": "Backlink Hub",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "repository": {
     "url": "https://github.com/mingmprod-arch/backlink-radar",
     "source": "github"
