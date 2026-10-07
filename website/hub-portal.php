@@ -328,6 +328,7 @@
           var b=rmEl('span','rmp-aichip',zh?'喺 AI 繼續 →':'Continue in AI →');
           b.onclick=function(){
             var p=RM_AI_PROMPTS[id][zh?'zh':'en'];
+            try{fetch('https://hub.recmoment.net/hub/public/ai-chip',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({section:id}),keepalive:true}).catch(function(){});}catch(e){}
             var done=function(){b.textContent=zh?'已複製 ✓ 貼落你嘅 AI':'Copied ✓ paste into your AI';setTimeout(rmRenderAIChips,2200);};
             var clip=null;try{clip=navigator.clipboard?navigator.clipboard.writeText:null;}catch(e){}
             if(clip){navigator.clipboard.writeText(p).then(done,function(){window.prompt(zh?'手動複製：':'Copy manually:',p);});}
